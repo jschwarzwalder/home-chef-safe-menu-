@@ -43,3 +43,12 @@ def is_excluded(text: str) -> bool:
             return True
 
     return False
+
+## For testing purposes, we will just return the meals unchanged for now.
+def evaluate_meals(meals):
+    """
+    Temporary pass-through logic.
+    For now: just return meals unchanged.
+    We will implement filtering rules next.
+    """
+    return meals

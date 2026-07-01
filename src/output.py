@@ -4,13 +4,29 @@ Builds final JSON output structure.
 
 import json
 
+import json
 
-def build_output(meals: list) -> dict:
+def build_output_json(meals):
+    """
+    Temporary output builder.
+    Converts whatever comes in into structured JSON.
+    """
+
+    output = {
+        "safe_options": meals,
+        "selected_order_review": [],
+        "better_alternatives": [],
+        "borderline": [],
+        "excluded_log": []
+    }
+
+    return json.dumps(output, indent=2)
+
     """
     Converts processed meals into structured JSON output.
     """
 
-    safe = []
+"""     safe = []
     excluded = []
 
     for meal in meals:
@@ -22,7 +38,7 @@ def build_output(meals: list) -> dict:
     return {
         "safe_options": safe,
         "excluded_log": excluded
-    }
+    } """
 
 
 def save_output(data: dict, filename="output.json"):
