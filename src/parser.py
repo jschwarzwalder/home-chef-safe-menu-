@@ -39,33 +39,56 @@ def extract_meals_from_text(html: str):
     soup = BeautifulSoup(html, "html.parser")
 
     meals = []
+    seen = set()
 
-    for tag in soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"]):
-        text = tag.get_text(" ", strip=True)
+    # 🔥 find any text containing a price
+    all_text = soup.find_all(string=True)
 
-        if len(text) < 5:
+    price_matches = []
+
+    for t in all_text:
+        if t:
+            if re.search(r"\$\d+\.\d{2}", t):
+                price_matches.append(t)
+
+    for price in price_matches:
+        container = price.find_parent()
+
+        if not container:
             continue
 
-        # 🔥 KEY FILTER: ignore obvious UI noise
-        junk_keywords = [
-            "Meal Kits",
-            "Discover",
-            "Your Opt-Out",
-            "Upcoming Orders",
-            "Extras",
-            "Your Offers",
-            "Accessibility",
-            "Home Chef",
-        ]
+        # look upward for a likely card container
+        card = container
+        for _ in range(5):  # climb DOM tree
+            if not card:
+                break
+            text = card.get_text(" ", strip=True)
 
-        if any(j in text for j in junk_keywords):
+            # heuristic: meal cards are long blocks of text
+            if len(text) > 40:
+                break
+            card = card.parent
+
+        if not card:
             continue
 
-        # 🔥 SECOND FILTER: real meals usually are longer than section headers
-        if len(text.split()) < 2:
+        # extract title from card
+        title_tag = card.find(["h1", "h2", "h3", "h4", "h5", "h6"])
+
+        if not title_tag:
             continue
 
-        meals.append(text)
+        name = title_tag.get_text(strip=True)
+
+        if name in seen:
+            continue
+        seen.add(name)
+
+        # filter obvious junk
+        if "Home Chef" in name or "Meal Kits" in name:
+            continue
+
+        meals.append(name)
 
     return meals
 
