@@ -41,54 +41,47 @@ def extract_meals_from_text(html: str):
     meals = []
     seen = set()
 
-    # 🔥 find any text containing a price
-    all_text = soup.find_all(string=True)
+    # Step 1: get all meal titles
+    for tag in soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"]):
+        name = tag.get_text(" ", strip=True)
 
-    price_matches = []
-
-    for t in all_text:
-        if t:
-            if re.search(r"\$\d+\.\d{2}", t):
-                price_matches.append(t)
-
-    for price in price_matches:
-        container = price.find_parent()
-
-        if not container:
+        if len(name.split()) < 2:
             continue
-
-        # look upward for a likely card container
-        card = container
-        for _ in range(5):  # climb DOM tree
-            if not card:
-                break
-            text = card.get_text(" ", strip=True)
-
-            # heuristic: meal cards are long blocks of text
-            if len(text) > 40:
-                break
-            card = card.parent
-
-        if not card:
-            continue
-
-        # extract title from card
-        title_tag = card.find(["h1", "h2", "h3", "h4", "h5", "h6"])
-
-        if not title_tag:
-            continue
-
-        name = title_tag.get_text(strip=True)
 
         if name in seen:
             continue
         seen.add(name)
 
-        # filter obvious junk
-        if "Home Chef" in name or "Meal Kits" in name:
+        # Step 2: grab surrounding context (important upgrade)
+        container = tag.find_parent()
+
+        if not container:
             continue
 
-        meals.append(name)
+        context_text = container.get_text(" ", strip=True)
+
+        # Step 3: extract simple signals
+        price = None
+        time = None
+
+        for token in context_text.split():
+            if "$" in token:
+                price = token
+
+        if "min" in context_text:
+            # crude time capture
+            parts = context_text.split()
+            for i, p in enumerate(parts):
+                if "min" in p:
+                    time = parts[max(0, i-1):i+1]
+                    time = " ".join(time)
+                    break
+
+        meals.append({
+            "name": name,
+            "price": price,
+            "time": time
+        })
 
     return meals
 
