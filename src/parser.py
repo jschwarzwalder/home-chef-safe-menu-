@@ -35,38 +35,37 @@ def is_meal_start(line: str) -> bool:
 
     return False
 
-
 def extract_meals_from_text(html: str):
     soup = BeautifulSoup(html, "html.parser")
 
     meals = []
 
-    # DEBUG STEP ONLY: find all headings
-    candidates = soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"])
-
-    for tag in candidates:
-        text = tag.get_text(strip=True)
+    for tag in soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"]):
+        text = tag.get_text(" ", strip=True)
 
         if len(text) < 5:
             continue
 
+        # 🔥 KEY FILTER: ignore obvious UI noise
+        junk_keywords = [
+            "Meal Kits",
+            "Discover",
+            "Your Opt-Out",
+            "Upcoming Orders",
+            "Extras",
+            "Your Offers",
+            "Accessibility",
+            "Home Chef",
+        ]
+
+        if any(j in text for j in junk_keywords):
+            continue
+
+        # 🔥 SECOND FILTER: real meals usually are longer than section headers
+        if len(text.split()) < 2:
+            continue
+
         meals.append(text)
-
-    return meals
-    lines = [l.strip() for l in raw_text.splitlines()]
-    meals = []
-    current = []
-
-    for line in lines:
-        if is_meal_start(line):
-            if current:
-                meals.append(" ".join(current).strip())
-                current = []
-
-        current.append(line)
-
-    if current:
-        meals.append(" ".join(current).strip())
 
     return meals
 
