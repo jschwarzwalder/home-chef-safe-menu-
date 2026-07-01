@@ -216,3 +216,44 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# =========================
+# PROJECT-SPECIFIC ADDITIONS
+# Home Chef Allergy Filter Project
+# =========================
+
+# Virtual env (already included above, but safe)
+venv/
+
+# Environment variables (secrets)
+.env
+.env.*
+
+# IDE settings (already partially covered globally, but OK to enforce)
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Playwright artifacts
+playwright-report/
+blob-report/
+test-results/
+
+# Logs
+*.log
+
+# Optional output folders (your pipeline results)
+data/output/
+output/
+
+# Sensitive local files (NEVER commit)
+credentials.json
+secrets.json
+
+# Node-style accidental files 
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
