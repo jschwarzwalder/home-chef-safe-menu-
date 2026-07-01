@@ -1,6 +1,7 @@
 """
 Parses raw Home Chef menu text into structured meal objects.
 """
+from bs4 import BeautifulSoup
 import re
 
 TIER_KEYWORDS = {
@@ -35,7 +36,23 @@ def is_meal_start(line: str) -> bool:
     return False
 
 
-def extract_meals_from_text(raw_text: str):
+def extract_meals_from_text(html: str):
+    soup = BeautifulSoup(html, "html.parser")
+
+    meals = []
+
+    # DEBUG STEP ONLY: find all headings
+    candidates = soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"])
+
+    for tag in candidates:
+        text = tag.get_text(strip=True)
+
+        if len(text) < 5:
+            continue
+
+        meals.append(text)
+
+    return meals
     lines = [l.strip() for l in raw_text.splitlines()]
     meals = []
     current = []
@@ -145,3 +162,4 @@ def parse_menu(raw_text: str):
             })
 
     return meals
+
