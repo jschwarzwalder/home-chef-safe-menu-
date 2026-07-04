@@ -1,8 +1,27 @@
 # Home Chef Allergy Screening Engine
 
+![Python](https://img.shields.io/badge/Python-3.11+-blue)
+![Status](https://img.shields.io/badge/status-active-green)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
 A Python-based meal filtering and analysis tool that processes Home Chef weekly menus and identifies safe meal options based on strict ingredient exclusion rules.
 
 This project is designed to reduce time spent manually reviewing meal kits and to help reliably filter out unsafe ingredients such as peppers, sauces, and hidden seasoning systems.
+
+---
+
+## Project Status
+
+This project is **actively developed and used for personal dietary filtering workflows**.
+
+It is iteratively updated as new ingredient patterns, menu structures, and edge cases are discovered during real-world use.
+
+Planned improvements are focused on:
+
+- improving ingredient parsing accuracy
+- expanding menu ingestion methods
+- increasing automation of weekly meal retrieval
+- refining exclusion rule logic
 
 ---
 
