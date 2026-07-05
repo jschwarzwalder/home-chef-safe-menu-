@@ -25,6 +25,21 @@ Planned improvements are focused on:
 
 ---
 
+## Why this exists
+
+Meal kit services like Home Chef often present ingredients in ways that are inconsistent, incomplete, or hidden inside sauces and seasoning systems.
+
+For individuals with non-standard or highly sensitive allergies, this creates a high-risk and time-consuming manual review process.
+
+This project exists to:
+
+- Reduce manual ingredient inspection time
+- Improve confidence in weekly meal selection
+- Systematically eliminate unsafe ingredient exposure
+- Bring structure and repeatability to an otherwise inconsistent decision process
+  
+---
+
 ## Goal
 
 Home Chef menus are large, inconsistent, and often include hidden ingredients that make safe selection difficult.
@@ -37,6 +52,23 @@ This tool:
 - Produces structured JSON output for downstream use
 - Helps identify safer alternatives across the full menu
 
+---
+
+## Quick Start
+
+1. Install dependencies:
+   pip install -r requirements.txt
+
+2. Run the main script:
+   python monitor.py
+
+3. Provide or load weekly Home Chef menu data
+
+4. Review generated output:
+   - safe_options
+   - borderline meals
+   - excluded meals
+ 
 ---
 
 ## Core Features
