@@ -38,8 +38,6 @@ This project exists to:
 - Systematically eliminate unsafe ingredient exposure
 - Bring structure and repeatability to an otherwise inconsistent decision process
 
---- 
-
 ## Goal
 
 Home Chef menus are large, inconsistent, and often include hidden ingredients that make safe selection difficult.
@@ -52,6 +50,78 @@ This tool:
 - Filters potentially unsafe meals automatically
 - Produces structured JSON output for downstream use
 - Helps identify safer alternatives across the full menu
+
+---
+
+## Current Architecture
+
+The project originally began as an HTML-scraping experiment using BeautifulSoup.
+
+During development, a more useful data source was discovered: Home Chef's own structured API response used by the logged-in calendar page.
+
+A current menu request has the form:
+
+`https://www.homechef.com/api/v3/menus/{date}/standard/meals`
+
+For example:
+
+`https://www.homechef.com/api/v3/menus/24-aug-2026/standard/meals`
+
+The API response contains structured meal objects with information including:
+
+- Meal title
+- Subtitle
+- Description
+- Meal tier/category
+- Prep time
+- Spice level
+- Nutrition information
+- Ingredients
+- Ingredient names
+- Ingredient-level allergen information
+- Instructions
+- Availability
+- Pricing
+
+This structured data is substantially more useful for allergy screening than attempting to infer meal information from rendered HTML.
+
+---
+
+## Quick Start
+
+1. Install dependencies:
+   pip install -r requirements.txt
+
+2. Run the main script:
+   python main.py
+
+
+3. Provide or load weekly Home Chef menu data
+
+4. Review generated output:
+   - safe_options
+   - borderline meals
+   - excluded meals
+ 
+---
+
+## Important Safety Principle
+
+A meal's displayed spice level is **not sufficient** to determine whether it is safe.
+
+For example, a meal may be labeled:
+
+`spice_level: "Not Spicy"`
+
+while its ingredient list contains:
+
+- Garlic Pepper
+- Garlic Salt
+- Steak Seasoning
+
+Therefore the screening engine must inspect the actual ingredient data.
+
+The project prioritizes ingredient-level evidence over assumptions based on meal names, marketing labels, or spice-level indicators.
 
 ---
 
