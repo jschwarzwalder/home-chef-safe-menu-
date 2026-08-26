@@ -1,4 +1,4 @@
-# Session Handoff — August 20, 2026
+# Session Handoff — August 26, 2026
 
 ## Where We Left Off
 
@@ -16,63 +16,23 @@ The project's virtual environment is:
 
 repo\.venv
 
-It contains the project's existing dependencies plus Playwright.
-
-## Important: Virtual Environment
-
-The correct environment for this project is:
-
-repo\.venv
+The correct environment for this project is the repository-level `.venv`.
 
 When working on the project, PowerShell should show:
 
-(.venv)
+    (.venv)
 
-The project currently has another `.venv` at the parent level:
+Do not use the parent-level environment:
 
 C:\Users\jschw\GitHub\home-chef-safe-menu\.venv
 
-Do not use that one for this project.
+The `homechef` environment is also separate and is not the project's environment.
 
-The `homechef` folder is also a separate virtual environment and is not the project's environment.
+---
 
-## What Worked Tonight
+## Current Repository State
 
-From:
-
-C:\Users\jschw\GitHub\home-chef-safe-menu\repo
-
-this works:
-
-    .\.venv\Scripts\Activate.ps1
-
-Then:
-
-    python --version
-
-returns:
-
-    Python 3.14.6
-
-The project dependencies are installed in this environment.
-
-Installed relevant packages include:
-
-- beautifulsoup4
-- requests
-- playwright
-
-Playwright was installed successfully.
-
-Playwright's Chromium browser was installed successfully with:
-
-    python -m playwright install chromium
-
-Do NOT install the unrelated Python package named `chromium`.
-
-## Existing Project
-
-Repository structure currently includes:
+The repository currently contains:
 
     data/
     src/
@@ -81,41 +41,46 @@ Repository structure currently includes:
     README.md
     requirements.txt
     run.ps1
+    Session Handoff.md
 
-Existing source files:
+Current source files include:
 
     src/parser.py
     src/rules.py
     src/output.py
     src/debug_html.py
 
-The existing parser was originally designed around saved HTML.
+The repository also currently contains:
 
-Running the old HTML parser produced 58 "meal blocks", but some were clearly unrelated page headings such as:
+    data/31-aug-2026.json
+    tests/fixtures/
+    tests/test_parser.py
 
-- Your Opt-Out Preference Signal is Honored
-- Discover New Favorites
-- Meal Kits
+`README.md` and `src/parser.py` have been modified.
 
-Therefore the HTML parser is not the ideal source for the real application.
+Parser tests and fixtures have been added.
 
-## Major Discovery Tonight
+---
 
-While logged into Home Chef in the normal Chrome browser, Chrome DevTools Network showed structured API requests.
+## Major Discovery
 
-The important request is:
+Home Chef's logged-in website exposes structured menu data through an API request.
 
-https://www.homechef.com/api/v3/menus/24-aug-2026/standard/meals
+The important endpoint pattern is:
 
-This endpoint returned structured JSON containing actual meal data.
+    https://www.homechef.com/api/v3/menus/{date}/standard/meals
 
-The response contains useful fields including:
+Example:
+
+    https://www.homechef.com/api/v3/menus/24-aug-2026/standard/meals
+
+The response contains structured meal information including fields such as:
 
 - id
 - title
 - subtitle
 - description
-- meal label / tier
+- meal tier/category
 - prep time
 - spice level
 - nutrition information
@@ -123,116 +88,117 @@ The response contains useful fields including:
 - ingredient names
 - ingredient-level allergen information
 - instructions
-- meal category
+- availability
 - pricing
-- availability information
 
-This is much more useful for the allergy engine than scraping the rendered HTML.
+This structured data is substantially more useful for the allergy-screening engine than scraping rendered HTML.
+
+---
 
 ## Current Menu Data
 
-A response from the Home Chef API was copied from Chrome DevTools using:
+A dated Home Chef menu response has been saved as:
 
-Network request
-→ Copy
-→ Copy response
+    data/31-aug-2026.json
 
-The response is approximately 721.9 KB.
+This provides a real captured menu fixture/data source for parser development.
 
-The JSON is currently minified onto one line. That is okay.
+Do not manually edit the captured Home Chef API response unless there is a specific reason to do so.
 
-The next task is to save/use this data as:
+The captured response represents a particular week's menu and may become outdated.
 
-    data/current-menu.json
+---
 
-If it has not yet been saved there, do that first tomorrow.
+## Parser Progress
 
-Do not manually edit or reformat the JSON.
+The project has moved from the original HTML-scraping approach toward structured JSON parsing.
+
+`src/parser.py` has been modified to support the structured Home Chef menu data.
+
+Parser tests have also been added:
+
+    tests/test_parser.py
+
+Test fixtures are stored under:
+
+    tests/fixtures/
+
+The immediate objective is to reliably convert Home Chef's structured JSON into normalized meal objects while preserving useful source information.
+
+Do not throw away useful fields prematurely.
+
+---
 
 ## Important Safety Discovery
 
-A meal can say:
+A meal's displayed spice level cannot be treated as evidence that the meal is safe.
+
+For example, a meal may contain:
 
     spice_level: "Not Spicy"
 
-while still containing ingredients that are important to the allergy screening.
-
-For example, the Filet Mignon meal we inspected contained:
+while its ingredient list contains:
 
 - Garlic Pepper
 - Garlic Salt
 - Steak Seasoning
 
-Therefore `spice_level` cannot be used as a proxy for being pepper-free.
+Therefore the allergy-screening engine must inspect actual ingredient data.
 
-The actual ingredient list needs to be inspected.
+Ingredient-level evidence takes priority over:
 
-This is one of the reasons the structured API data is valuable.
+- meal names
+- marketing descriptions
+- spice-level labels
+- assumptions about whether an ingredient "should" contain pepper
+
+Conservative filtering is intentional.
+
+---
 
 ## Revised Architecture
 
-The project should now move toward:
+The intended architecture is:
 
-Home Chef structured JSON
-        ↓
-JSON parser
-        ↓
-Structured meal objects
-        ↓
-Allergy rule engine
-        ↓
-Safe / Borderline / Excluded
-        ↓
-Structured output
+    Home Chef structured JSON
+            ↓
+    JSON parser
+            ↓
+    Structured meal objects
+            ↓
+    Allergy rule engine
+            ↓
+    SAFE / BORDERLINE / NOT SAFE
+            ↓
+    Structured JSON output
 
-The existing rule engine and output system should be reused where practical.
+The useful existing rule and output architecture should be preserved where practical.
 
-Do not redesign the whole project.
+The old HTML parser does not need to remain the primary input path.
 
-## Immediate Next Task
+---
 
-Tomorrow, start by:
+## Existing HTML Parser
 
-1. Open the repository in VSCodium.
+The original parser was designed around saved Home Chef HTML.
 
-2. Make sure the terminal is in:
+It previously produced approximately 58 "meal blocks", but some blocks were unrelated page content such as:
 
-    C:\Users\jschw\GitHub\home-chef-safe-menu\repo
+- Your Opt-Out Preference Signal is Honored
+- Discover New Favorites
+- Meal Kits
 
-3. Activate:
+This demonstrated that rendered HTML is not a reliable primary data source for the application.
 
-    .\.venv\Scripts\Activate.ps1
+The HTML-related code can remain for debugging or historical purposes, but it should not drive the main structured-menu workflow unless there is a specific reason.
 
-4. Confirm:
+---
 
-    (.venv)
+## Target Meal Object
 
-appears in PowerShell.
+The normalized meal representation should preserve useful information.
 
-5. Confirm:
-
-    data/current-menu.json
-
-exists.
-
-6. Inspect the JSON structure.
-
-7. Inspect the existing:
-
-    src/parser.py
-    src/rules.py
-    src/output.py
-    main.py
-
-8. Add a small JSON parsing capability.
-
-Do NOT rewrite the entire parser yet.
-
-## First Coding Goal
-
-Turn the Home Chef API response into a Python list of structured meal objects.
-
-A target object might look roughly like:
+A simplified target may resemble:
 
     {
         "name": "Filet Mignon with Roasted Garlic-Chive Butter",
@@ -255,88 +221,288 @@ A target object might look roughly like:
         ]
     }
 
-Do not throw away useful fields prematurely.
+The exact structure should follow the actual API response rather than forcing the data into an unnecessarily restrictive schema.
 
-First get the data into Python and inspect what we actually have.
+---
+
+## Allergy Rules
+
+The intended screening system includes conservative exclusion/review rules for:
+
+### Pepper and Chili Family
+
+Examples include:
+
+- black pepper
+- white pepper
+- paprika
+- chili
+- chile
+- jalapeño
+- chipotle
+- serrano
+- ancho
+- related pepper/chili ingredients
+
+### Bell Peppers
+
+Bell peppers should be excluded regardless of:
+
+- color
+- preparation
+- whether fresh, roasted, blended, or cooked
+
+### Sauce Systems
+
+Examples include:
+
+- BBQ sauce
+- pesto
+- chimichurri
+- harissa
+- katsu sauce
+- marinara when its ingredients are not sufficiently transparent
+
+### Hidden Flavor Systems
+
+Ingredients or ingredient systems such as:
+
+- spices
+- natural flavors
+- undefined seasoning blends
+- undefined sauce or marinade components
+
+may require exclusion or additional review.
+
+### Hard Blocks
+
+Home Chef Cream Sauce Base or equivalent products are hard exclusions.
+
+---
+
+## Current Development Milestone
+
+The project has progressed beyond simply discovering the Home Chef API.
+
+The current milestone is:
+
+    Connect and validate structured JSON parsing
+    with the existing allergy rule engine.
+
+The desired pipeline is:
+
+    data/31-aug-2026.json
+            ↓
+        JSON parser
+            ↓
+    normalized meal objects
+            ↓
+      allergy rules
+            ↓
+    SAFE / BORDERLINE / NOT SAFE
+            ↓
+      structured output
+
+Parser tests now exist.
+
+The rule engine still needs to be validated against the structured meal objects before this milestone can be considered complete.
+
+---
+
+## Git Status
+
+The previous README.md merge conflict has been resolved.
+
+The local branch was successfully reconciled with the remote repository.
+
+The repository should be checked with:
+
+    git status
+
+before beginning the next development session.
+
+If there are no unexpected changes, continue with the structured JSON parser/rule-engine work.
+
+Do not use `git push --force` unless there is a deliberate decision to rewrite remote branch history.
+
+---
+
+## README Status
+
+The README has been substantially expanded and now documents:
+
+- project purpose
+- current architecture
+- structured Home Chef API discovery
+- safety principles
+- exclusion rules
+- output format
+- meal object format
+- repository structure
+- development status
+- development workflow
+- Playwright status
+- planned development
+- technology stack
+- local usage
+- safety notes
+- license
+
+The README is therefore functioning as the project documentation.
+
+The current Git conflict must be resolved before its final merged state can be considered authoritative.
+
+Do not keep adding documentation merely for completeness.
+
+---
+
+## Screenshot / Meal Plan Work
+
+A separate workflow has been established for extracting selected Home Chef meals from screenshots or captured page content.
+
+The intended rules for that workflow are:
+
+- Extract visible entrée meal names.
+- Group meals by Home Chef delivery date.
+- Exclude desserts, breakfasts, sides, snacks, and add-ons unless explicitly requested.
+- Preserve meal wording as closely as possible.
+- Do not invent obscured meal names.
+- Use `Uncertain Meal Name` when the name cannot be reliably determined.
+- Use the exact cook time shown.
+- Identify effort as Easy or Standard.
+- EXPRESS → Easy.
+- OVEN-READY → Easy.
+- Otherwise → Standard.
+- Premium pricing does not determine effort.
+- Identify visible cooking style when available.
+- Do not assign delivery meals to weekdays unless specifically requested.
+
+This screenshot workflow is useful for meal planning but should remain separate from the core JSON parser/rule-engine milestone unless it becomes necessary to integrate them.
+
+---
+
+## Playwright Status
+
+Playwright is installed and working.
+
+Chromium was installed successfully using:
+
+    python -m playwright install chromium
+
+Do NOT install the unrelated Python package named `chromium`.
+
+Home Chef's automated browser session encountered Cloudflare security verification.
+
+The normal Chrome browser was able to reach Home Chef and log in.
+
+Therefore browser automation is not currently the primary development task.
+
+The structured JSON workflow should be proven first.
+
+---
 
 ## Development Style
 
-Use small, testable changes.
+Continue using small, testable changes.
 
 For each change:
 
 1. Inspect.
 2. Change one thing.
 3. Run it.
-4. Look at the output.
+4. Inspect the result.
 5. Fix the specific problem.
 6. Run again.
-7. Commit.
+7. Commit the working change.
 
-Do not replace large portions of the project unless there is a specific reason.
+Avoid replacing large portions of the project without a specific reason.
 
-Suggested first commit after the JSON parser works:
+Do not redesign the whole application simply because additional improvements are possible.
 
-    feat: parse Home Chef meal JSON
+---
 
-## Playwright Status
+## Immediate Next Action
 
-Playwright is installed and working.
+The Git merge conflict has already been resolved.
 
-Chromium successfully downloaded through Playwright.
+Start the next session by:
 
-However, Home Chef's automated browser session encountered a Cloudflare security verification page.
+1. Open the repository in VSCodium.
+2. Confirm the terminal is in:
 
-The normal Chrome browser was able to reach Home Chef and log in.
+       C:\Users\jschw\GitHub\home-chef-safe-menu\repo
 
-Therefore:
+3. Activate:
 
-Playwright/browser automation is NOT the immediate task.
+       .\.venv\Scripts\Activate.ps1
 
-First prove that the API JSON → parser → rules pipeline works.
+4. Confirm:
 
-Later we can determine how to reliably obtain fresh menu JSON.
+       (.venv)
 
-## Important Architectural Correction
+   appears in PowerShell.
 
-The old plan said:
+5. Run:
 
-"the parser doesn't change. Only the input changes."
+       git status
 
-That assumption is no longer valid.
+6. Run the test suite:
 
-The HTML parser and JSON parser are different input formats.
+       python -m pytest
 
-The goal is NOT to preserve the old parser at all costs.
+7. Inspect the current parser and test results.
 
-The goal is to preserve the useful rule engine/output architecture while using the best available Home Chef data source.
+If the repository is clean and the tests pass, continue with the actual development milestone:
 
-## Do Not Do Tomorrow
+    structured Home Chef JSON
+            ↓
+        JSON parser
+            ↓
+      meal objects
+            ↓
+      allergy rule engine
+            ↓
+    SAFE / BORDERLINE / NOT SAFE
+
+Do not reopen the resolved Git merge conflict.
+
+---
+
+## Do Not Do
 
 Do not:
 
-- rebuild the whole application
-- rewrite all existing files
+- rewrite the entire application
+- discard the structured API approach
 - immediately solve Cloudflare
 - build a dashboard
 - add GitHub Actions
-- add Discord/email
-- optimize the system prematurely
+- add Discord/email notifications
+- optimize prematurely
+- create duplicate sources of truth
+- turn the handoff into a daily journal
+- add documentation that does not improve practical use
 
-First prove:
+---
 
-    current-menu.json
-        ↓
-    Python parser
-        ↓
-    meal objects
-        ↓
-    existing rules
+## End State
 
-Then continue one small step at a time.
+The project has successfully moved past the initial HTML-scraping investigation.
 
-## End State Tonight
+The important architectural discovery is confirmed:
 
-The most important discovery is that Home Chef is already sending the browser structured meal data containing the ingredient information needed for the project.
+Home Chef provides structured menu data containing the ingredient information needed for the allergy-screening workflow.
 
-We do not need to solve website scraping before we can make progress on the actual allergy-screening engine.
+The project now has:
+
+- a captured dated menu JSON file
+- a structured JSON parsing direction
+- parser tests and fixtures
+- an existing rule engine
+- an existing output system
+- documented exclusion rules
+- a documented safety philosophy
+
+The immediate technical issue is the unresolved Git merge conflict in `README.md`.
+
+Once that is resolved and the tests pass, development can continue with connecting the normalized parser output to the existing allergy rule engine.
