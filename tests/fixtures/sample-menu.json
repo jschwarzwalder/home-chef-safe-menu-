@@ -1,0 +1,112 @@
+{
+  "id": 999999,
+  "slug": "sample-menu",
+  "meals": [
+    {
+      "id": 1001,
+      "title": "Herbes de Provence Chicken",
+      "subtitle": "with roasted potatoes and green beans",
+      "description": "A simple chicken dinner with roasted vegetables.",
+      "meal_label": "Fresh Start",
+      "meal_plan_slug": "standard",
+      "prep_minutes": 35,
+      "max_cook_time": 40,
+      "spice_level": "Not Spicy",
+      "allergen_tags": [],
+      "dietary_tags": ["Protein-Packed"],
+      "ingredients": [
+        {
+          "name": "Chicken Breasts",
+          "amount": "12 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Russet Potatoes",
+          "amount": "12 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Green Beans",
+          "amount": "6 oz.",
+          "allergens": [],
+          "photo": null
+        }
+      ]
+    },
+    {
+      "id": 1002,
+      "title": "Filet Mignon with Roasted Garlic-Chive Butter",
+      "subtitle": "and loaded veggie twice-baked potato",
+      "description": "A steak dinner with garlic-chive butter.",
+      "meal_label": "Culinary Collection",
+      "meal_plan_slug": "standard",
+      "prep_minutes": 50,
+      "max_cook_time": 60,
+      "spice_level": "Not Spicy",
+      "allergen_tags": ["milk"],
+      "dietary_tags": ["Protein-Packed", "Gluten-Smart"],
+      "ingredients": [
+        {
+          "name": "Filets Mignon",
+          "amount": "10 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Butter",
+          "amount": "2 oz.",
+          "allergens": ["milk"],
+          "photo": null
+        },
+        {
+          "name": "Garlic Pepper",
+          "amount": "1 tsp.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Steak Seasoning",
+          "amount": "1/2 tsp.",
+          "allergens": [],
+          "photo": null
+        }
+      ]
+    },
+    {
+      "id": 1003,
+      "title": "Garlic Pesto Shrimp",
+      "subtitle": "with roasted vegetables",
+      "description": "Shrimp served with pesto and vegetables.",
+      "meal_label": "Premium",
+      "meal_plan_slug": "standard",
+      "prep_minutes": 30,
+      "max_cook_time": 35,
+      "spice_level": "Not Spicy",
+      "allergen_tags": ["milk", "shellfish"],
+      "dietary_tags": [],
+      "ingredients": [
+        {
+          "name": "Shrimp",
+          "amount": "10 oz.",
+          "allergens": ["shellfish"],
+          "photo": null
+        },
+        {
+          "name": "Pesto",
+          "amount": "2 oz.",
+          "allergens": ["milk"],
+          "photo": null
+        },
+        {
+          "name": "Broccoli Florets",
+          "amount": "6 oz.",
+          "allergens": [],
+          "photo": null
+        }
+      ]
+    }
+  ],
+  "meal_option_groups": []
+}

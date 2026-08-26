@@ -178,3 +178,36 @@ def parse_menu(raw_text: str):
 
     return meals
 
+def parse_homechef_json(data: dict):
+    """
+    Parse structured Home Chef JSON into internal meal objects.
+    """
+
+    meals = []
+
+    for meal in data.get("meals", []):
+        ingredients = []
+
+        for ingredient in meal.get("ingredients", []):
+            ingredients.append({
+                "name": ingredient.get("name"),
+                "amount": ingredient.get("amount"),
+                "allergens": ingredient.get("allergens", [])
+            })
+
+        meals.append({
+            "id": meal.get("id"),
+            "name": meal.get("title"),
+            "subtitle": meal.get("subtitle"),
+            "description": meal.get("description"),
+            "tier": meal.get("meal_label"),
+            "meal_plan_slug": meal.get("meal_plan_slug"),
+            "prep_minutes": meal.get("prep_minutes"),
+            "max_cook_time": meal.get("max_cook_time"),
+            "spice_level": meal.get("spice_level"),
+            "allergen_tags": meal.get("allergen_tags", []),
+            "dietary_tags": meal.get("dietary_tags", []),
+            "ingredients": ingredients,
+        })
+
+    return meals

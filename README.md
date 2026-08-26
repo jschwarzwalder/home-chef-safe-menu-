@@ -190,25 +190,25 @@ Example excluded meal:
 {
   "name": "Smoky Peppercorn Beef Burger",
   "ingredients": [
-        {
-          "name": "Ground Beef",
-          "amount": "10 oz.",
-          "allergens": [],
-          "photo": null
-        },
-        {
-          "name": "Butter",
-          "amount": "2 oz.",
-          "allergens": ["milk"],
-          "photo": null
-        },
-        {
-          "name": "Garlic Pepper",
-          "amount": "1 tsp.",
-          "allergens": [],
-          "photo": null
-        },
-    ],
+    {
+      "name": "Ground Beef",
+      "amount": "10 oz.",
+      "allergens": [],
+      "photo": null
+    },
+    {
+      "name": "Butter",
+      "amount": "2 oz.",
+      "allergens": ["milk"],
+      "photo": null
+    },
+    {
+      "name": "Garlic Pepper",
+      "amount": "1 tsp.",
+      "allergens": [],
+      "photo": null
+    }
+  ],
   "allergen_tags": ["milk"]
 }
 
@@ -249,13 +249,10 @@ This system prioritizes:
 
 ## Planned Enhancements
 
-- Complete structured Home Chef JSON parser
 - Connect parsed meals to the exclusion engine
 - Generate safe/borderline/excluded output
 - Improve automated retrieval of fresh weekly menu data
 - AnyList integration
-
----
 
 ---
 
