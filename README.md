@@ -486,6 +486,149 @@ The implementation should be based on what proves reliable rather than committin
 
 ---
 
+## Home Chef Menu URL Generator
+
+The project includes a small utility for generating the Home Chef weekly menu API URLs without manually calculating the Monday date.
+
+The utility does **not** log in to Home Chef or download the menu. It only calculates the appropriate Monday dates and generates the corresponding API URLs.
+
+This is useful because Home Chef's menu endpoint follows a weekly Monday schedule.
+
+### Basic Usage
+
+From the repository root, with the project virtual environment activated:
+
+```powershell
+python tools/homechef_urls.py
+```
+
+With no date supplied, the tool finds the **next Monday** and generates one URL.
+
+Example:
+
+```text
+Starting Monday: 31-aug-2026
+Weeks: 1
+
+31-aug-2026
+https://www.homechef.com/api/v3/menus/31-aug-2026/standard/meals
+```
+
+### Generate Multiple Weeks
+
+Use `--weeks` to generate several consecutive weekly URLs:
+
+```powershell
+python tools/homechef_urls.py --weeks 5
+```
+
+This generates five consecutive Mondays.
+
+### Start From a Specific Date
+
+You can provide any date in `DD-mon-YYYY` format:
+
+```powershell
+python tools/homechef_urls.py 26-aug-2026
+```
+
+If the supplied date is not a Monday, the tool automatically advances to the next Monday.
+
+For example:
+
+```text
+26-aug-2026 → 31-aug-2026
+```
+
+You can also request multiple weeks:
+
+```powershell
+python tools/homechef_urls.py 26-aug-2026 --weeks 5
+```
+
+The resulting dates would begin:
+
+```text
+31-aug-2026
+07-sep-2026
+14-sep-2026
+21-sep-2026
+28-sep-2026
+```
+
+### Supplying a Monday
+
+If the supplied date is already a Monday, that Monday is used as the starting date:
+
+```powershell
+python tools/homechef_urls.py 31-aug-2026 --weeks 3
+```
+
+This produces:
+
+```text
+31-aug-2026
+07-sep-2026
+14-sep-2026
+```
+
+### Current Workflow
+
+Because Home Chef requires an authenticated browser session and automated Playwright access may encounter Cloudflare verification, the current workflow is intentionally simple:
+
+```text
+Generate URLs
+      ↓
+Open URL in authenticated browser
+      ↓
+Save Home Chef JSON
+      ↓
+Place JSON in data/
+      ↓
+Run parser
+      ↓
+Apply allergy rules
+```
+
+The URL generator does not attempt to bypass Home Chef authentication or Cloudflare protection.
+
+### Running the Tests
+
+The URL generator has its own test suite.
+
+Run all project tests with:
+
+```powershell
+python -m pytest
+```
+
+The tests verify:
+
+* Monday date handling
+* Finding the next Monday
+* Multiple weekly dates
+* Seven-day intervals
+* Date formatting
+* Home Chef URL formatting
+* Invalid dates
+* Invalid date formats
+* Invalid week counts
+* URL generation from arbitrary starting dates
+
+The URL generator tests are located at:
+
+```text
+tests/test_homechef_urls.py
+```
+
+The utility itself is located at:
+
+```text
+tools/homechef_urls.py
+```
+
+---
+
 ## Tech Stack
 
 - Python 3.11+
