@@ -1,508 +1,721 @@
-# Session Handoff — August 26, 2026
+# Session Handoff — August 28, 2026
 
 ## Where We Left Off
 
-We are building the Home Chef Safe Menu project.
+We are building the **Home Chef Safe Menu** project.
 
 Repository:
 
+```text
 C:\Users\jschw\GitHub\home-chef-safe-menu\repo
+```
+
+The authoritative long-term project description is now in:
+
+```text
+Master Project Notes
+```
+
+`README.md` remains the project-facing documentation.
+
+This handoff is intentionally shorter than the Master Project Notes. It records **current development state and recent decisions**, not the entire project history.
+
+---
+
+## Current Environment
 
 Python:
 
+```text
 Python 3.14.6
+```
 
-The project's virtual environment is:
+Project virtual environment:
 
+```text
 repo\.venv
+```
 
-The correct environment for this project is the repository-level `.venv`.
+Use the repository-level `.venv`.
 
-When working on the project, PowerShell should show:
+PowerShell should show:
 
-    (.venv)
+```text
+(.venv)
+```
 
-Do not use the parent-level environment:
+Do not use:
 
+```text
 C:\Users\jschw\GitHub\home-chef-safe-menu\.venv
+```
 
-The `homechef` environment is also separate and is not the project's environment.
-
----
-
-## Current Repository State
-
-The repository currently contains:
-
-    data/
-    src/
-    tests/
-    main.py
-    README.md
-    requirements.txt
-    run.ps1
-    Session Handoff.md
-
-Current source files include:
-
-    src/parser.py
-    src/rules.py
-    src/output.py
-    src/debug_html.py
-
-The repository also currently contains:
-
-    data/31-aug-2026.json
-    tests/fixtures/
-    tests/test_parser.py
-
-`README.md` and `src/parser.py` have been modified.
-
-Parser tests and fixtures have been added.
+The separate `homechef` environment is also not the project environment.
 
 ---
 
-## Major Discovery
+## Current Repository
 
-Home Chef's logged-in website exposes structured menu data through an API request.
+Primary files:
 
-The important endpoint pattern is:
+```text
+src/parser.py
+src/rules.py
+src/output.py
+src/debug_html.py
+main.py
+tests/
+data/
+requirements.txt
+run.ps1
+README.md
+Session Handoff.md
+```
 
-    https://www.homechef.com/api/v3/menus/{date}/standard/meals
+Important captured data:
+
+```text
+data/31-aug-2026.json
+```
+
+Parser tests and fixtures exist under:
+
+```text
+tests/
+tests/fixtures/
+```
+
+Before doing anything else next session:
+
+```powershell
+git status
+python -m pytest
+```
+
+Then inspect the current parser/rule-engine state rather than rebuilding anything.
+
+---
+
+# Important Architectural State
+
+The project has moved away from HTML scraping as its primary data source.
+
+Current intended pipeline:
+
+```text
+Home Chef structured JSON
+        ↓
+JSON parser
+        ↓
+Normalized meal objects
+        ↓
+Practical screening
+        ↓
+Candidate shortlist
+        ↓
+Human investigation/selection
+```
+
+The captured Home Chef JSON is the important development fixture.
+
+**Do not restart parser development unless the tests or actual data show a problem.**
+
+The next major development work is connecting/validating the practical screening rules against the normalized parser output.
+
+---
+
+# Current Project Philosophy
+
+The project is **not** trying to make an absolute medical safety determination.
+
+It is a **practical meal-triage tool**.
+
+The question is:
+
+> Which meals are worth spending limited attention on, given what can realistically be removed or substituted without turning dinner into a project?
+
+The computer should eliminate obvious time-wasters and surface useful candidates.
+
+The human makes the final decision.
+
+---
+
+# Major Rule Correction From Earlier Notes
+
+The older allergy-rule description was too conservative for the actual household workflow.
+
+The current model is:
+
+```text
+PROBLEMATIC?
+      ↓
+CAN IT BE ADAPTED?
+      ↓
+IS THE ADAPTATION WORTH THE EFFORT?
+```
+
+Those are three separate questions.
+
+The presence of pepper does **not** automatically mean "reject."
+
+---
+
+# Current Practical Screening Rules
+
+## Bell Pepper
+
+Bell pepper is generally removable.
+
+```text
+Bell Pepper
+    ↓
+remove it
+    ↓
+KEEP CANDIDATE
+```
+
+Do **not** automatically exclude a meal because it contains bell pepper.
+
+---
+
+## Standalone Garlic Pepper
+
+Standalone Garlic Pepper is generally replaceable.
+
+Typical household substitutions:
+
+```text
+Garlic Salt
+Garlic Powder
+```
+
+Therefore:
+
+```text
+Standalone Garlic Pepper
+    ↓
+ADAPTABLE
+```
+
+Keep the meal as a candidate.
+
+---
+
+## Pepper in Instructions
+
+Pepper appearing only in cooking instructions is normally ignored.
+
+The household is accustomed to simply skipping it.
 
 Example:
 
-    https://www.homechef.com/api/v3/menus/24-aug-2026/standard/meals
+```text
+Season with pepper.
+```
 
-The response contains structured meal information including fields such as:
-
-- id
-- title
-- subtitle
-- description
-- meal tier/category
-- prep time
-- spice level
-- nutrition information
-- ingredients
-- ingredient names
-- ingredient-level allergen information
-- instructions
-- availability
-- pricing
-
-This structured data is substantially more useful for the allergy-screening engine than scraping rendered HTML.
+This does not make the meal a bad candidate.
 
 ---
 
-## Current Menu Data
+## Compound Butter
 
-A dated Home Chef menu response has been saved as:
+Compound butter is generally adaptable.
 
-    data/31-aug-2026.json
+Examples:
 
-This provides a real captured menu fixture/data source for parser development.
+```text
+Herb Butter
+Compound Butter
+Beurre Blanc Butter
+```
 
-Do not manually edit the captured Home Chef API response unless there is a specific reason to do so.
+Plain butter may be substituted when practical.
 
-The captured response represents a particular week's menu and may become outdated.
-
----
-
-## Parser Progress
-
-The project has moved from the original HTML-scraping approach toward structured JSON parsing.
-
-`src/parser.py` has been modified to support the structured Home Chef menu data.
-
-Parser tests have also been added:
-
-    tests/test_parser.py
-
-Test fixtures are stored under:
-
-    tests/fixtures/
-
-The immediate objective is to reliably convert Home Chef's structured JSON into normalized meal objects while preserving useful source information.
-
-Do not throw away useful fields prematurely.
+Do not automatically reject these meals.
 
 ---
 
-## Important Safety Discovery
+## Cream Sauce Base
 
-A meal's displayed spice level cannot be treated as evidence that the meal is safe.
+An integral prepared Home Chef Cream Sauce Base is a hard practical block.
 
-For example, a meal may contain:
+The issue is not merely pepper.
 
-    spice_level: "Not Spicy"
+The issue is that recreating or replacing the component can turn a normal meal into a substantial cooking/research project.
 
-while its ingredient list contains:
-
-- Garlic Pepper
-- Garlic Salt
-- Steak Seasoning
-
-Therefore the allergy-screening engine must inspect actual ingredient data.
-
-Ingredient-level evidence takes priority over:
-
-- meal names
-- marketing descriptions
-- spice-level labels
-- assumptions about whether an ingredient "should" contain pepper
-
-Conservative filtering is intentional.
+```text
+Integral Cream Sauce Base
+    ↓
+DON'T WASTE THE CLICK
+```
 
 ---
 
-## Revised Architecture
+## Prepared Pepper-Containing Sauces
 
-The intended architecture is:
+A major prepared sauce containing problematic seasoning is generally not worth investigating when replacing it would require substantial research or recreation.
 
-    Home Chef structured JSON
-            ↓
-    JSON parser
-            ↓
-    Structured meal objects
-            ↓
-    Allergy rule engine
-            ↓
-    SAFE / BORDERLINE / NOT SAFE
-            ↓
-    Structured JSON output
+This is especially important for weeknight meals.
 
-The useful existing rule and output architecture should be preserved where practical.
+A theoretical substitution is not enough.
 
-The old HTML parser does not need to remain the primary input path.
+If replacing the sauce turns:
 
----
+```text
+30-minute meal
+```
 
-## Existing HTML Parser
+into:
 
-The original parser was designed around saved Home Chef HTML.
+```text
+research + shopping + recipe recreation + extended cooking
+```
 
-It previously produced approximately 58 "meal blocks", but some blocks were unrelated page content such as:
-
-- Your Opt-Out Preference Signal is Honored
-- Discover New Favorites
-- Meal Kits
-
-This demonstrated that rendered HTML is not a reliable primary data source for the application.
-
-The HTML-related code can remain for debugging or historical purposes, but it should not drive the main structured-menu workflow unless there is a specific reason.
+the meal should generally be removed from the candidate pool.
 
 ---
 
-## Target Meal Object
+## Pre-Seasoned Components
 
-The normalized meal representation should preserve useful information.
+Avoid pre-seasoned/prepared seasoned components when the seasoning cannot be controlled.
 
-A simplified target may resemble:
+Examples:
 
-    {
-        "name": "Filet Mignon with Roasted Garlic-Chive Butter",
-        "subtitle": "and loaded veggie twice-baked potato",
-        "tier": "Culinary Collection",
-        "prep_time": "50-60",
-        "spice_level": "Not Spicy",
-        "ingredients": [
-            "Russet Potatoes",
-            "Filets Mignon",
-            "Broccoli Florets",
-            "Light Sour Cream",
-            "Butter",
-            "Shredded Cheddar Cheese",
-            "Chive Sprigs",
-            "Garlic Cloves",
-            "Garlic Pepper",
-            "Garlic Salt",
-            "Steak Seasoning"
-        ]
-    }
+```text
+Pre-seasoned potatoes
+Seasoned potatoes
+Pre-seasoned protein
+Prepared seasoned components
+```
 
-The exact structure should follow the actual API response rather than forcing the data into an unnecessarily restrictive schema.
+The concern is both seasoning control **and** preserving the time-saving purpose of the meal.
+
+Do not recommend replacing a Home Chef pre-cooked component with cooking the equivalent ingredient from scratch as though that were a trivial substitution.
+
+Also:
+
+> Do not suggest microwaving potatoes as a workaround.
+
+That has already proven to be an undesirable solution.
 
 ---
 
-## Allergy Rules
+# Seasoning Blends
 
-The intended screening system includes conservative exclusion/review rules for:
+Seasoning blends are **not automatic exclusions**.
 
-### Pepper and Chili Family
+This is an important correction to the older rules.
 
-Examples include:
+### Known problematic blend
 
-- black pepper
-- white pepper
-- paprika
-- chili
-- chile
-- jalapeño
-- chipotle
-- serrano
-- ancho
-- related pepper/chili ingredients
+If the actual ingredients clearly contain a prohibited ingredient:
 
-### Bell Peppers
+```text
+EXCLUDE / DON'T WASTE THE CLICK
+```
 
-Bell peppers should be excluded regardless of:
+### Unknown blend
 
-- color
-- preparation
-- whether fresh, roasted, blended, or cooked
+If Home Chef gives only something like:
 
-### Sauce Systems
+```text
+Southwest Seasoning
+Steak Seasoning
+House Seasoning
+```
 
-Examples include:
+without enough information:
 
-- BBQ sauce
-- pesto
-- chimichurri
-- harissa
-- katsu sauce
-- marinara when its ingredients are not sufficiently transparent
+```text
+🟡 REVIEW
+```
 
-### Hidden Flavor Systems
+Do not automatically reject it.
 
-Ingredients or ingredient systems such as:
+### Potentially replaceable blend
 
-- spices
-- natural flavors
-- undefined seasoning blends
-- undefined sauce or marinade components
+The household already makes and uses its own seasoning blends.
 
-may require exclusion or additional review.
+Examples of available household-style substitutions include:
 
-### Hard Blocks
+* homemade chili-style blend without chilis, paprika, or pepper
+* herbs de Provence
+* za'atar
+* garlic-based seasonings
 
-Home Chef Cream Sauce Base or equivalent products are hard exclusions.
+Therefore the tool should **flag the blend and let the user decide whether an existing substitute works**.
+
+Do not assume that an unknown blend is safe.
+
+Do not assume that an unknown blend is automatically unusable.
 
 ---
 
-## Current Development Milestone
+# Spicy-Sounding Meal Titles
 
-The project has progressed beyond simply discovering the Home Chef API.
+A spicy-sounding title is **not a first-pass rejection**.
 
-The current milestone is:
+Examples:
 
-    Connect and validate structured JSON parsing
-    with the existing allergy rule engine.
+```text
+Spicy Chicken
+Chipotle Beef
+Cajun Chicken
+Black Pepper Steak
+```
 
-The desired pipeline is:
+Title language is evidence, but actual ingredient/component data is more useful.
 
-    data/31-aug-2026.json
-            ↓
-        JSON parser
-            ↓
-    normalized meal objects
-            ↓
-      allergy rules
-            ↓
-    SAFE / BORDERLINE / NOT SAFE
-            ↓
-      structured output
+The practical workflow is:
 
-Parser tests now exist.
+1. First find at least three meals that actually sound appealing.
+2. If there are enough good choices, spicy-sounding meals can remain lower priority.
+3. If fewer than three appealing candidates survive, reconsider these meals during the second pass.
 
-The rule engine still needs to be validated against the structured meal objects before this milestone can be considered complete.
+The goal is **choice**, not maximum conservatism.
 
 ---
 
-## Git Status
+# Minimum Candidate Rule
 
-The previous README.md merge conflict has been resolved.
+The practical target is:
 
-The local branch was successfully reconciled with the remote repository.
+```text
+AT LEAST 3 meals the user would actually consider eating
+```
 
-The repository should be checked with:
+The first pass should therefore be intentionally generous enough to preserve choice.
 
-    git status
+Conceptually:
 
-before beginning the next development session.
+```text
+FULL MENU
+    ↓
+FIRST PASS
+    ↓
+obvious time-wasters removed
+    ↓
+Do we have ≥ 3 appealing candidates?
+       │
+       ├── YES → continue
+       │
+       └── NO → reconsider adaptable/review candidates
+```
 
-If there are no unexpected changes, continue with the structured JSON parser/rule-engine work.
-
-Do not use `git push --force` unless there is a deliberate decision to rewrite remote branch history.
-
----
-
-## README Status
-
-The README has been substantially expanded and now documents:
-
-- project purpose
-- current architecture
-- structured Home Chef API discovery
-- safety principles
-- exclusion rules
-- output format
-- meal object format
-- repository structure
-- development status
-- development workflow
-- Playwright status
-- planned development
-- technology stack
-- local usage
-- safety notes
-- license
-
-The README is therefore functioning as the project documentation.
-
-The current Git conflict must be resolved before its final merged state can be considered authoritative.
-
-Do not keep adding documentation merely for completeness.
+A result of zero or one technically "safe" meals is not useful if several meals could have been practically adapted.
 
 ---
 
-## Screenshot / Meal Plan Work
+# Candidate Categories
 
-A separate workflow has been established for extracting selected Home Chef meals from screenshots or captured page content.
+The rule engine should move toward these practical categories:
 
-The intended rules for that workflow are:
+### 🟢 PROMISING
 
-- Extract visible entrée meal names.
-- Group meals by Home Chef delivery date.
-- Exclude desserts, breakfasts, sides, snacks, and add-ons unless explicitly requested.
-- Preserve meal wording as closely as possible.
-- Do not invent obscured meal names.
-- Use `Uncertain Meal Name` when the name cannot be reliably determined.
-- Use the exact cook time shown.
-- Identify effort as Easy or Standard.
-- EXPRESS → Easy.
-- OVEN-READY → Easy.
-- Otherwise → Standard.
-- Premium pricing does not determine effort.
-- Identify visible cooking style when available.
-- Do not assign delivery meals to weekdays unless specifically requested.
+Straightforward meal with little/no adaptation required.
 
-This screenshot workflow is useful for meal planning but should remain separate from the core JSON parser/rule-engine milestone unless it becomes necessary to integrate them.
+### 🟢 ADAPTABLE
 
----
+A known, practical substitution/removal works.
 
-## Playwright Status
+Examples:
 
-Playwright is installed and working.
+```text
+Bell Pepper → remove
+Garlic Pepper → garlic powder/salt
+Instruction pepper → omit
+Compound butter → plain butter
+```
 
-Chromium was installed successfully using:
+### 🟡 REVIEW
 
-    python -m playwright install chromium
+Something needs a human judgment or additional recipe inspection.
 
-Do NOT install the unrelated Python package named `chromium`.
+Examples:
 
-Home Chef's automated browser session encountered Cloudflare security verification.
+```text
+Unknown seasoning blend
+Ambiguous seasoning system
+Unclear prepared component
+```
 
-The normal Chrome browser was able to reach Home Chef and log in.
+### 🔴 DON'T WASTE THE CLICK
 
-Therefore browser automation is not currently the primary development task.
+The available information already indicates that investigation is unlikely to be worth the user's time.
 
-The structured JSON workflow should be proven first.
+Examples:
 
----
-
-## Development Style
-
-Continue using small, testable changes.
-
-For each change:
-
-1. Inspect.
-2. Change one thing.
-3. Run it.
-4. Inspect the result.
-5. Fix the specific problem.
-6. Run again.
-7. Commit the working change.
-
-Avoid replacing large portions of the project without a specific reason.
-
-Do not redesign the whole application simply because additional improvements are possible.
+```text
+Integral Cream Sauce Base
+Major prepared pepper-containing sauce
+Pre-seasoned component
+Prepared component that cannot practically be adapted
+```
 
 ---
 
-## Immediate Next Action
+# Website Workflow Discovery
 
-The Git merge conflict has already been resolved.
+The Home Chef website does not always use the exact meal title we see in other data.
 
-Start the next session by:
+A recipe URL may not take directly to the exact cart-selection page.
 
-1. Open the repository in VSCodium.
-2. Confirm the terminal is in:
+Example behavior observed:
 
-       C:\Users\jschw\GitHub\home-chef-safe-menu\repo
+A meal described as:
 
-3. Activate:
+```text
+Low-Carb Lemony Chicken Piccata
+```
 
-       .\.venv\Scripts\Activate.ps1
+was actually presented in the user's available menu as:
 
-4. Confirm:
+```text
+Quick Chicken Piccata
+```
 
-       (.venv)
+The user found it by visually searching the Express menu.
 
-   appears in PowerShell.
+Therefore:
 
-5. Run:
+> Do not depend on exact title matching for ordering/navigation.
 
-       git status
+Preserve:
 
-6. Run the test suite:
+* meal ID
+* recipe URL
+* calendar URL when available
+* meal title
 
-       python -m pytest
+The human-facing output must include a clickable Home Chef link whenever one is available.
 
-7. Inspect the current parser and test results.
+The link is needed so the user can:
 
-If the repository is clean and the tests pass, continue with the actual development milestone:
-
-    structured Home Chef JSON
-            ↓
-        JSON parser
-            ↓
-      meal objects
-            ↓
-      allergy rule engine
-            ↓
-    SAFE / BORDERLINE / NOT SAFE
-
-Do not reopen the resolved Git merge conflict.
+1. inspect the recipe
+2. resolve ambiguous ingredients
+3. locate the meal
+4. add it to the cart
 
 ---
 
-## Do Not Do
+# Recent Real-World Validation
 
-Do not:
+The practical rules were tested against an actual Home Chef selection.
 
-- rewrite the entire application
-- discard the structured API approach
-- immediately solve Cloudflare
-- build a dashboard
-- add GitHub Actions
-- add Discord/email notifications
-- optimize prematurely
-- create duplicate sources of truth
-- turn the handoff into a daily journal
-- add documentation that does not improve practical use
+Final selected meals for the September 2 delivery were:
+
+```text
+Tzatziki Trout
+Rotisserie-Style Chicken with Herb Butter
+Pork Chop with Pear-Fig Chutney
+Quick Chicken Piccata
+```
+
+The order also included:
+
+```text
+Cheddar & Monterey Grilled Cheese
+Caramel Apple Blossoms
+```
+
+The four entrée choices demonstrate useful variety:
+
+```text
+Fish
+Chicken
+Pork
+Chicken
+```
+
+and included both standard meal kits and an Express meal.
+
+The Rotisserie-Style Chicken meal also demonstrated that a broth concentrate can be practically substituted when the household has an appropriate Better Than Bouillon-style replacement, while the seasoning can be recreated from known ingredients.
+
+This is a useful example of why **practical adaptability** matters more than simplistic keyword rejection.
 
 ---
 
-## End State
+# Tier / Cost Priority
 
-The project has successfully moved past the initial HTML-scraping investigation.
+Meal tier is separate from pepper/safety/practical classification.
 
-The important architectural discovery is confirmed:
+Preferred ordering priority:
 
-Home Chef provides structured menu data containing the ingredient information needed for the allergy-screening workflow.
+```text
+Standard
+    ↓
+Culinary Collection
+    ↓
+Premium
+```
 
-The project now has:
+A more expensive Culinary Collection meal should not automatically displace a practical Standard meal merely because it looks appealing.
 
-- a captured dated menu JSON file
-- a structured JSON parsing direction
-- parser tests and fixtures
-- an existing rule engine
-- an existing output system
-- documented exclusion rules
-- a documented safety philosophy
+A Culinary Collection meal can still be useful when the Standard pool is insufficient.
 
-The immediate technical issue is the unresolved Git merge conflict in `README.md`.
+Premium should generally be fallback rather than automatically promoted.
 
-Once that is resolved and the tests pass, development can continue with connecting the normalized parser output to the existing allergy rule engine.
+Important:
+
+```text
+Premium ≠ difficult
+Culinary Collection ≠ difficult
+```
+
+Tier describes purchasing/pricing priority, not cooking effort.
+
+---
+
+# Current Technical Milestone
+
+The project is currently at:
+
+```text
+structured Home Chef JSON
+        ↓
+existing parser
+        ↓
+normalized meal objects
+        ↓
+PRACTICAL RULE ENGINE  ← next major work
+        ↓
+candidate classification
+        ↓
+shortlist
+        ↓
+human selection
+```
+
+Do **not** restart the project.
+
+Do **not** rebuild the HTML scraper.
+
+Do **not** solve Cloudflare.
+
+Do **not** build a dashboard.
+
+Do **not** add unrelated integrations.
+
+---
+
+# Next Development Session
+
+Start with:
+
+```powershell
+cd C:\Users\jschw\GitHub\home-chef-safe-menu\repo
+.\.venv\Scripts\Activate.ps1
+git status
+python -m pytest
+```
+
+Then inspect:
+
+```text
+src/parser.py
+src/rules.py
+src/output.py
+tests/test_parser.py
+```
+
+Specifically determine:
+
+1. What normalized fields the parser currently produces.
+2. What the current rule engine expects.
+3. What tests already exist.
+4. What the smallest missing connection is.
+
+Then add **one behavior test** for the practical screening model.
+
+Good first real cases:
+
+```text
+Bell Pepper → adaptable
+Garlic Pepper → adaptable
+Instruction-only pepper → adaptable
+Compound Butter → adaptable
+Cream Sauce Base → don't waste the click
+Pre-seasoned component → don't waste the click
+Unknown seasoning blend → review
+```
+
+Implement only the smallest behavior required by the test.
+
+Run:
+
+```powershell
+python -m pytest
+```
+
+Inspect the actual output before making the next change.
+
+---
+
+# Git / Documentation State
+
+The previous README merge conflict has been resolved.
+
+Do not reopen or recreate that conflict.
+
+`README.md` and the Master Project Notes should not become competing sources of truth.
+
+Use:
+
+```text
+README.md
+    ↓
+project-facing documentation
+
+Master Project Notes
+    ↓
+authoritative project behavior/architecture/rules
+
+Session Handoff
+    ↓
+where development resumes next time
+```
+
+Do not turn the Session Handoff into a daily journal.
+
+Only add information that will materially help resume work.
+
+---
+
+# Important Stopping Rule
+
+Work in small milestones.
+
+For each meaningful change:
+
+```text
+inspect
+→ change one thing
+→ test
+→ inspect output
+→ fix specific problem
+→ test again
+→ commit
+→ stop
+```
+
+When the current milestone works:
+
+> **STOP.**
+
+Do not invent additional work just because it could eventually be useful.
+
+---
+
+# Immediate Resume Point
+
+The next useful technical question is:
+
+> **Can the existing normalized Home Chef meal objects be passed cleanly into a practical rule engine that distinguishes PROMISING, ADAPTABLE, REVIEW, and DON'T WASTE THE CLICK?**
+
+That is where development should resume.
+
+The parser discovery is done.
+
+The practical household rules are now much clearer.
+
+The next step is to encode those rules **carefully and test-first**, using the real captured menu data rather than inventing a giant speculative keyword list.
