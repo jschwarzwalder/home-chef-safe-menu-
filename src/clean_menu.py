@@ -44,6 +44,7 @@ Outputs:
 
 import argparse
 import json
+import urllib.request
 from pathlib import Path
 
 
@@ -131,6 +132,86 @@ def is_included(meal, amount):
 
     return meal_amount == amount
 
+def fetch_meal_details(meal_id):
+    """
+    Fetch detailed ingredient information for one Home Chef meal.
+
+    ```
+    The Home Chef nutritional-facts endpoint includes ingredient names
+    with their parenthetical ingredient lists, which are needed for
+    detailed allergy and ingredient screening.
+    """
+
+    url = (
+        "https://www.homechef.com/api/v3/nutritional_facts/"
+        f"{meal_id}"
+    )
+
+    request = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/140.0.0.0 Safari/537.36"
+            ),
+            "Accept": "application/json, text/plain, */*",
+            "Referer": "https://www.homechef.com/",
+        },
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=15) as response:
+            return json.load(response)
+
+    except Exception as error:
+        print(
+            f"Warning: could not fetch details for {meal_id}: "
+            f"{error}"
+        )
+        return None
+
+
+def get_detailed_ingredients(meal):
+    """
+    Fetch and return the detailed ingredient list for a meal.
+
+    Falls back to the ingredient names already present in the menu
+    when the detailed API request fails.
+    """
+
+    meal_id = meal.get("id")
+
+    if not meal_id:
+        return [
+            ingredient.get("name")
+            for ingredient in meal.get("ingredients", [])
+            if ingredient.get("name")
+        ]
+
+    details = fetch_meal_details(meal_id)
+
+    if not details:
+        return [
+            ingredient.get("name")
+            for ingredient in meal.get("ingredients", [])
+            if ingredient.get("name")
+        ]
+
+    detailed_ingredients = details.get("ingredients", [])
+
+    if not detailed_ingredients:
+        return [
+            ingredient.get("name")
+            for ingredient in meal.get("ingredients", [])
+            if ingredient.get("name")
+        ]
+
+    return [
+        ingredient
+        for ingredient in detailed_ingredients
+        if ingredient
+    ]
 
 def clean_ingredient(ingredient):
     """Keep only the ingredient name."""
@@ -146,11 +227,14 @@ def clean_ingredient(ingredient):
 def clean_meal(meal):
     """Create the compact normalized representation of one meal."""
 
-    ingredients = [
-        name
-        for ingredient in meal.get("ingredients", [])
-        if (name := clean_ingredient(ingredient))
-    ]
+    ingredients = get_detailed_ingredients(meal)
+
+    if ingredients and isinstance(ingredients[0], dict):
+        ingredients = [
+            name
+            for ingredient in ingredients
+            if (name := clean_ingredient(ingredient))
+        ]
 
     cleaned = {
         "id": meal.get("id"),
@@ -283,3 +367,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
