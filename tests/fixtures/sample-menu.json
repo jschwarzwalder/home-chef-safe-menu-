@@ -7,13 +7,21 @@
       "title": "Herbes de Provence Chicken",
       "subtitle": "with roasted potatoes and green beans",
       "description": "A simple chicken dinner with roasted vegetables.",
-      "meal_label": "Fresh Start",
+      "menu_category_and_color": {
+        "label": "Entree"
+      },
+      "meal_label": {
+        "label": "Fresh Start"
+      },
       "meal_plan_slug": "standard",
+      "servings": 2,
       "prep_minutes": 35,
       "max_cook_time": 40,
       "spice_level": "Not Spicy",
       "allergen_tags": [],
-      "dietary_tags": ["Protein-Packed"],
+      "dietary_tags": [
+        "Protein-Packed"
+      ],
       "ingredients": [
         {
           "name": "Chicken Breasts",
@@ -40,13 +48,24 @@
       "title": "Filet Mignon with Roasted Garlic-Chive Butter",
       "subtitle": "and loaded veggie twice-baked potato",
       "description": "A steak dinner with garlic-chive butter.",
-      "meal_label": "Culinary Collection",
+      "menu_category_and_color": {
+        "label": "Entree"
+      },
+      "meal_label": {
+        "label": "Culinary Collection"
+      },
       "meal_plan_slug": "standard",
+      "servings": 2,
       "prep_minutes": 50,
       "max_cook_time": 60,
       "spice_level": "Not Spicy",
-      "allergen_tags": ["milk"],
-      "dietary_tags": ["Protein-Packed", "Gluten-Smart"],
+      "allergen_tags": [
+        "milk"
+      ],
+      "dietary_tags": [
+        "Protein-Packed",
+        "Gluten-Smart"
+      ],
       "ingredients": [
         {
           "name": "Filets Mignon",
@@ -57,7 +76,9 @@
         {
           "name": "Butter",
           "amount": "2 oz.",
-          "allergens": ["milk"],
+          "allergens": [
+            "milk"
+          ],
           "photo": null
         },
         {
@@ -79,24 +100,37 @@
       "title": "Garlic Pesto Shrimp",
       "subtitle": "with roasted vegetables",
       "description": "Shrimp served with pesto and vegetables.",
-      "meal_label": "Premium",
+      "menu_category_and_color": {
+        "label": "Entree"
+      },
+      "meal_label": {
+        "label": "Premium"
+      },
       "meal_plan_slug": "standard",
+      "servings": 2,
       "prep_minutes": 30,
       "max_cook_time": 35,
       "spice_level": "Not Spicy",
-      "allergen_tags": ["milk", "shellfish"],
+      "allergen_tags": [
+        "milk",
+        "shellfish"
+      ],
       "dietary_tags": [],
       "ingredients": [
         {
           "name": "Shrimp",
           "amount": "10 oz.",
-          "allergens": ["shellfish"],
+          "allergens": [
+            "shellfish"
+          ],
           "photo": null
         },
         {
           "name": "Pesto",
           "amount": "2 oz.",
-          "allergens": ["milk"],
+          "allergens": [
+            "milk"
+          ],
           "photo": null
         },
         {
@@ -106,6 +140,783 @@
           "photo": null
         }
       ]
+    },
+    {
+      "id": 1004,
+      "title": "Basil Butter Chicken and Tomato Tortellini",
+      "subtitle": "with tomatoes and herbs",
+      "description": "Chicken and cheese tortellini with basil butter and tomato pesto.",
+      "menu_category_and_color": {
+        "label": "Entree"
+      },
+      "meal_label": {
+        "label": "Culinary Collection"
+      },
+      "meal_plan_slug": "standard",
+      "servings": 2,
+      "prep_minutes": 35,
+      "max_cook_time": 40,
+      "spice_level": "Not Spicy",
+      "allergen_tags": [
+        "milk",
+        "wheat",
+        "egg"
+      ],
+      "dietary_tags": [],
+      "ingredients": [
+        {
+          "name": "Boneless Skinless Chicken Breasts",
+          "amount": "12 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Par-Cooked 5-Cheese Tortellini",
+          "amount": "9 oz.",
+          "allergens": [
+            "milk",
+            "wheat",
+            "egg"
+          ],
+          "photo": null
+        },
+        {
+          "name": "Cream Sauce Base",
+          "amount": "4 fl. oz.",
+          "allergens": [
+            "milk"
+          ],
+          "photo": null
+        },
+        {
+          "name": "Grape Tomatoes",
+          "amount": "6 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Basil Pesto Butter",
+          "amount": "2 oz.",
+          "allergens": [
+            "milk"
+          ],
+          "photo": null
+        },
+        {
+          "name": "Sun Dried Tomato Pesto",
+          "amount": "2 oz.",
+          "allergens": [
+            "milk"
+          ],
+          "photo": null
+        },
+        {
+          "name": "Grated Parmesan Cheese",
+          "amount": "1 oz.",
+          "allergens": [
+            "milk"
+          ],
+          "photo": null
+        },
+        {
+          "name": "Chive Sprigs",
+          "amount": "2",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Garlic Pepper",
+          "amount": "1 tsp.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Lemon N Herb Seasoning",
+          "amount": "1 tsp.",
+          "allergens": [],
+          "photo": null
+        }
+      ]
+    },
+    {
+      "id": 1005,
+      "title": "Beef & Butternut Squash Risotto",
+      "subtitle": "with fig preserves and blue cheese",
+      "description": "Steak and butternut squash risotto with savory seasonings.",
+      "menu_category_and_color": {
+        "label": "Entree"
+      },
+      "meal_label": {
+        "label": "Culinary Collection"
+      },
+      "meal_plan_slug": "standard",
+      "servings": 2,
+      "prep_minutes": 45,
+      "max_cook_time": 50,
+      "spice_level": "Not Spicy",
+      "allergen_tags": [
+        "milk"
+      ],
+      "dietary_tags": [],
+      "ingredients": [
+        {
+          "name": "Cubed Butternut Squash",
+          "amount": "8 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Steak Strips",
+          "amount": "10 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Arborio Rice",
+          "amount": "5 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Shredded Parmesan Cheese",
+          "amount": "2 oz.",
+          "allergens": [
+            "milk"
+          ],
+          "photo": null
+        },
+        {
+          "name": "Roasted Garlic & Herb Butter",
+          "amount": "2 oz.",
+          "allergens": [
+            "milk"
+          ],
+          "photo": null
+        },
+        {
+          "name": "Balsamic Glaze",
+          "amount": "1 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Fig Preserves",
+          "amount": "1 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Blue Cheese Crumbles",
+          "amount": "2 oz.",
+          "allergens": [
+            "milk"
+          ],
+          "photo": null
+        },
+        {
+          "name": "Vegetable Base",
+          "amount": "1 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Beef Broth Concentrate",
+          "amount": "1 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Chive Sprigs",
+          "amount": "2",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Savory Seasoning",
+          "amount": "1 tsp.",
+          "allergens": [],
+          "photo": null
+        }
+      ]
+    },
+    {
+      "id": 1006,
+      "title": "Chicken and Sweet Potato Tacos",
+      "meal_label": {
+        "label": "Family"
+      },
+      "meal_plan_slug": "standard",
+      "servings": 4,
+      "prep_minutes": 30,
+      "max_cook_time": 35,
+      "spice_level": "Medium",
+      "allergen_tags": [],
+      "dietary_tags": [],
+      "ingredients": [
+        {
+          "name": "Diced Boneless Skinless Chicken Breasts",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Black Beans",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Frozen Corn",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Sweet Potato Cubes",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Slaw Mix",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Small Flour Tortillas",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Fire Roasted Salsa",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Buttermilk Ranch Dressing",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Shredded Cheddar-Jack Cheese",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Chipotle Crema",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Cream Cheese",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Light Sour Cream",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Taco Seasoning",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Fiesta Seasoning",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        }
+      ]
+    },
+    {
+      "id": 1007,
+      "title": "One-Pot Beef Mac and Cheese Burrito",
+      "meal_label": {
+        "label": "Family"
+      },
+      "meal_plan_slug": "standard",
+      "servings": 4,
+      "prep_minutes": 35,
+      "max_cook_time": 45,
+      "spice_level": "Not Spicy",
+      "allergen_tags": [],
+      "dietary_tags": [],
+      "ingredients": [
+        {
+          "name": "Ground Beef",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Cream Sauce Base",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Pipette Pasta",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Onion",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Roma Tomato",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Large Flour Tortillas",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Shredded Cheddar Cheese",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Thousand Island Dressing",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Garlic Salt",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Steak Seasoning",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        }
+      ]
+    },
+    {
+      "id": 1008,
+      "title": "Boom Boom Turkey Rice Bowl",
+      "subtitle": "with stir-fried vegetables",
+      "description": "A quick family-friendly turkey rice bowl with stir-fried vegetables and boom boom sauce.",
+      "meal_label": {
+        "label": "Family"
+      },
+      "meal_plan_slug": "standard",
+      "servings": 4,
+      "prep_minutes": 20,
+      "max_cook_time": 30,
+      "spice_level": "Medium",
+      "allergen_tags": [
+        "eggs",
+        "wheat",
+        "sesame",
+        "soy"
+      ],
+      "dietary_tags": [],
+      "filterable_tags": [
+        "Easy-Prep"
+      ],
+      "ingredients": [
+        {
+          "name": "Ground Turkey",
+          "amount": "16 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Cooked White Rice",
+          "amount": "16 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Slaw Mix",
+          "amount": "8 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Matchstick Carrots",
+          "amount": "6 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Sweet & Thick Soy Sauce",
+          "amount": "4 fl. oz.",
+          "allergens": [
+            "soy"
+          ],
+          "photo": null
+        },
+        {
+          "name": "Boom Boom Sauce",
+          "amount": "4 oz.",
+          "allergens": [
+            "eggs"
+          ],
+          "photo": null
+        },
+        {
+          "name": "Sesame Sticks",
+          "amount": "1 oz.",
+          "allergens": [
+            "wheat",
+            "sesame"
+          ],
+          "photo": null
+        },
+        {
+          "name": "Green Onions",
+          "amount": 2,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Lightly Toasted Sesame Oil",
+          "amount": "1/2 oz.",
+          "allergens": [
+            "sesame"
+          ],
+          "photo": null
+        },
+        {
+          "name": "Umami Seasoning",
+          "amount": "2 tsp.",
+          "allergens": [
+            "soy"
+          ],
+          "photo": null
+        }
+      ],
+      "meal_option_groups": [
+        {
+          "id": "WPea7mPk",
+          "title": "Pick your protein",
+          "meal_options": []
+        }
+      ]
+    },
+    {
+      "id": 1009,
+      "title": "One-Pan French Onion Beef Gemelli",
+      "meal_label": {
+        "label": "Premium"
+      },
+      "meal_plan_slug": "standard",
+      "servings": 4,
+      "prep_minutes": null,
+      "max_cook_time": null,
+      "spice_level": null,
+      "allergen_tags": [],
+      "dietary_tags": [],
+      "ingredients": [
+        {
+          "name": "Steak Strips",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Cooked Gemelli",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Cream Sauce Base",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Shallot",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Shredded Swiss Cheese",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Shredded Mozzarella",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Mushroom Broth Concentrate",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "AP Flour",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Onion Salt",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Thyme Sprigs",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Garlic and Parsley Seasoning",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        }
+      ]
+    },
+    {
+      "id": 1010,
+      "title": "Greek-Style Breakfast Scramble",
+      "meal_label": {
+        "label": "Breakfast"
+      },
+      "meal_plan_slug": "standard",
+      "servings": 1,
+      "prep_minutes": null,
+      "max_cook_time": null,
+      "spice_level": null,
+      "allergen_tags": [],
+      "dietary_tags": [],
+      "ingredients": [
+        {
+          "name": "Pre-Cooked Scrambled Eggs",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Roasted Red Potatoes",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "All Natural Turkey Sausage Patty",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Spinach and Artichoke Sauce",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Shredded Mozzarella",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        }
+      ]
+    },
+    {
+      "id": 1011,
+      "title": "Grilled Chicken in Garlic Cream",
+      "menu_category_and_color": {
+        "label": "Entree"
+      },
+      "meal_label": null,
+      "meal_plan_slug": "standard",
+      "servings": 1,
+      "prep_minutes": null,
+      "max_cook_time": null,
+      "spice_level": null,
+      "allergen_tags": [],
+      "dietary_tags": [],
+      "ingredients": [
+        {
+          "name": "Grilled Sous Vide Chicken Breast",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Steamed Green Beans",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Roasted Red Potatoes",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Roasted Garlic Cream Sauce",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Shredded Mozzarella",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Basil Pesto Butter",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Parsley",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        }
+      ]
+    },
+    {
+      "id": 1012,
+      "title": "Smoked Gouda Mac & Cheese",
+      "menu_category_and_color": {
+        "label": "Entree"
+      },
+      "meal_label": {
+        "label": "10g+ Protein",
+        "color": "#9CD9DB",
+        "text_color": "#2B2B2B"
+      },
+      "meal_plan_slug": "standard",
+      "servings": 1,
+      "prep_minutes": null,
+      "max_cook_time": null,
+      "spice_level": null,
+      "allergen_tags": [],
+      "dietary_tags": [],
+      "ingredients": [
+        {
+          "name": "Smoked Gouda Mac & Cheese",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        }
+      ]
+    },
+    {
+      "id": 1013,
+      "title": "Sirloin Steaks",
+      "menu_category_and_color": {
+        "label": "Entree"
+      },
+      "meal_label": null,
+      "meal_plan_slug": "standard",
+      "servings": 1,
+      "prep_minutes": null,
+      "max_cook_time": null,
+      "spice_level": null,
+      "allergen_tags": [],
+      "dietary_tags": [],
+      "ingredients": [
+        {
+          "name": "Sirloin Steaks",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        }
+      ]
+    },
+    {
+      "id": 1014,
+      "title": "Pepperoni and Mozzarella Flatbread",
+      "menu_category_and_color": {
+        "label": "Entree"
+      },
+      "meal_label": null,
+      "meal_plan_slug": "standard",
+      "servings": 1,
+      "prep_minutes": null,
+      "max_cook_time": null,
+      "spice_level": null,
+      "allergen_tags": [],
+      "dietary_tags": [],
+      "ingredients": [
+        {
+          "name": "Pepperoni & Mozzarella Flatbread",
+          "amount": null,
+          "allergens": [],
+          "photo": null
+        }
+      ]
+    },
+    {
+      "id": 1015,
+      "title": "Premium Garlic Butter Steak",
+      "meal_label": {
+        "label": "Premium"
+      },
+      "meal_plan_slug": "standard",
+      "servings": 2,
+      "prep_minutes": 30,
+      "max_cook_time": 35,
+      "spice_level": "Not Spicy",
+      "allergen_tags": [
+        "milk"
+      ],
+      "dietary_tags": [],
+      "ingredients": [
+        {
+          "name": "Sirloin Steak",
+          "amount": "10 oz.",
+          "allergens": [],
+          "photo": null
+        },
+        {
+          "name": "Garlic Butter",
+          "amount": "2 oz.",
+          "allergens": [
+            "milk"
+          ],
+          "photo": null
+        },
+        {
+          "name": "Roasted Potatoes",
+          "amount": "12 oz.",
+          "allergens": [],
+          "photo": null
+        }
+      ],
+      "recipe_url": "https://www.homechef.com/meals/premium-garlic-butter-steak"
     }
   ],
   "meal_option_groups": []

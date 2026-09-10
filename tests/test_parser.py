@@ -13,7 +13,24 @@ def test_parse_homechef_json_returns_all_meals():
 
     meals = parse_homechef_json(data)
 
-    assert len(meals) == 3
+    assert len(meals) == 15
+    assert [meal["id"] for meal in meals] == [
+        1001,
+        1002,
+        1003,
+        1004,
+        1005,
+        1006,
+        1007,
+        1008,
+        1009,
+        1010,
+        1011,
+        1012,
+        1013,
+        1014,
+        1015,
+    ]
 
 
 def test_parser_preserves_meal_metadata():
