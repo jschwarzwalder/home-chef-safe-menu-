@@ -373,7 +373,7 @@ Current project structure:
 
 ### Current Milestone
 
-Connect the structured meal parser to the allergy rule engine.
+Validate the structured menu pipeline and connect it to the practical screening rules.
 
 Current pipeline:
 

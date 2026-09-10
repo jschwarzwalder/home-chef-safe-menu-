@@ -42,7 +42,7 @@ def test_parser_preserves_meal_metadata():
 
     assert meal["name"] == "Herbes de Provence Chicken"
     assert meal["subtitle"] == "with roasted potatoes and green beans"
-    assert meal["tier"] == "Fresh Start"
+    assert meal["tier"] == {"label": "Fresh Start"}
     assert meal["prep_minutes"] == 35
     assert meal["spice_level"] == "Not Spicy"
 
