@@ -1,0 +1,498 @@
+{
+  "meals": [
+    {
+      "id": "pOJGLL3y",
+      "name": "Carolina BBQ Apple and Beef Burger",
+      "type": "Meal Kit",
+      "tier": "Culinary Collection",
+      "servings": 2,
+      "ingredients": [
+        "Russet Potatoes",
+        "Ground Beef",
+        "Gala Apple",
+        "Brioche Buns",
+        "Shredded Red Cabbage",
+        "Golden BBQ Sauce",
+        "Bacon Bits",
+        "Shredded Cheddar Cheese",
+        "Mayonnaise ",
+        "Apple Cider Vinegar"
+      ]
+    },
+    {
+      "id": "yP5wnEO8",
+      "name": "Basil Butter Chicken and Tomato Tortellini",
+      "type": "Meal Kit",
+      "tier": "Culinary Collection",
+      "servings": 2,
+      "ingredients": [
+        "Boneless Skinless Chicken Breasts",
+        "Par-Cooked 5-Cheese Tortellini",
+        "Cream Sauce Base",
+        "Grape Tomatoes",
+        "Basil Pesto Butter",
+        "Sun Dried Tomato Pesto",
+        "Grated Parmesan Cheese",
+        "Chive Sprigs",
+        "Garlic Pepper",
+        "Lemon N Herb Seasoning"
+      ]
+    },
+    {
+      "id": "pq140vP5",
+      "name": "Cheddar and Spinach-Stuffed Chicken",
+      "type": "Meal Kit",
+      "tier": "Culinary Collection",
+      "servings": 2,
+      "ingredients": [
+        "Broccoli Florets ",
+        "Boneless Skinless Chicken Breasts",
+        "Cream Cheese",
+        "Baby Spinach",
+        "Shredded Cheddar Cheese",
+        "Lemon Garlic Butter",
+        "Shredded Parmesan Cheese",
+        "Crispy Fried Onions",
+        "Ranch Seasoning",
+        "Garlic Pepper"
+      ]
+    },
+    {
+      "id": "zPajE7qv",
+      "name": "Beef & Butternut Squash Risotto",
+      "type": "Meal Kit",
+      "tier": "Culinary Collection",
+      "servings": 2,
+      "ingredients": [
+        "Cubed Butternut Squash",
+        "Steak Strips",
+        "Arborio Rice",
+        "Fig Preserves",
+        "Shredded Parmesan Cheese",
+        "Roasted Garlic & Herb Butter",
+        "Balsamic Glaze",
+        "Blue Cheese Crumbles",
+        "Vegetable Base",
+        "Beef Broth Concentrate",
+        "Chive Sprigs",
+        "Savory Seasoning"
+      ]
+    },
+    {
+      "id": "bP81NVqz",
+      "name": "Mahi Mahi Fish ‘n’ Chips",
+      "type": "Meal Kit",
+      "tier": "Culinary Collection",
+      "servings": 2,
+      "ingredients": [
+        "Russet Potatoes",
+        "Mahi-Mahi Fillets",
+        "Shredded Red Cabbage",
+        "Lemon",
+        "Biscuit Mix",
+        "Canola Oil",
+        "Mayonnaise ",
+        "Apple Cider Vinegar",
+        "Mango Chutney",
+        "Cilantro",
+        "Onion Salt",
+        "Curry Powder"
+      ]
+    },
+    {
+      "id": "4P66wWPY",
+      "name": "Scallops atop Truffled Mushroom Risotto",
+      "type": "Meal Kit",
+      "tier": "Culinary Collection",
+      "servings": 2,
+      "ingredients": [
+        "Patagonian Petite Scallops",
+        "Cremini Mushrooms",
+        "Arborio Rice",
+        "Sicilian Sauce",
+        "Shredded Parmesan Cheese",
+        "Creme Fraiche",
+        "Truffle Butter",
+        "Mirepoix Broth Concentrate",
+        "Chive Sprigs",
+        "Garlic Salt"
+      ]
+    },
+    {
+      "id": "WPeYD9Pk",
+      "name": "Homestyle Broccoli, Cheddar, and Chicken Soup",
+      "type": "Express",
+      "tier": "Unknown Tier",
+      "servings": 2,
+      "ingredients": [
+        "Diced Boneless Skinless Chicken Breasts",
+        "Cream Sauce Base",
+        "Broccoli Florets",
+        "Shredded White Cheddar Cheese",
+        "Cream Cheese",
+        "Seasoned Croutons",
+        "Potato Spice Seasoning",
+        "Garlic Pepper"
+      ]
+    },
+    {
+      "id": "xPovKk3g",
+      "name": "Tarragon Creme Chicken",
+      "type": "Meal Kit",
+      "tier": "Fall Harvest",
+      "servings": 2,
+      "ingredients": [
+        "Chicken Strips ",
+        "Red Beet",
+        "Cubed Butternut Squash",
+        "Creme Fraiche",
+        "Honey",
+        "Baby Arugula",
+        "Savory Seasoning",
+        "Lemon Juice",
+        "Tarragon Sprig",
+        "Garlic and Parsley Seasoning"
+      ]
+    },
+    {
+      "id": "WPekJwOk",
+      "name": "Feisty Calabrian Pepper Beef Couscous",
+      "type": "Meal Kit",
+      "tier": "Unknown Tier",
+      "servings": 2,
+      "ingredients": [
+        "Steak Strips",
+        "Cream Sauce Base",
+        "Zucchini",
+        "Pearl Couscous",
+        "Shallot",
+        "Arrabbiata Pesto",
+        "Cream Cheese",
+        "Shredded Parmesan Cheese",
+        "Chopped Calabrian Peppers",
+        "Garlic and Parsley Seasoning",
+        "Garlic Salt"
+      ]
+    },
+    {
+      "id": "d3V05pqD",
+      "name": "Za'atar Salmon with Lemon Crema",
+      "type": "Express",
+      "tier": "One Sheet Pan ",
+      "servings": 2,
+      "ingredients": [
+        "Red Potatoes",
+        "Salmon",
+        "Creme Fraiche",
+        "Roasted Garlic & Herb Butter",
+        "Lemon Juice",
+        "Za'atar Seasoning",
+        "Garlic Salt",
+        "Dill Sprigs"
+      ]
+    },
+    {
+      "id": "MqgW7yqn",
+      "name": "Southern Fried Shrimp",
+      "type": "Meal Kit",
+      "tier": "Unknown Tier",
+      "servings": 2,
+      "ingredients": [
+        "Russet Potatoes",
+        "Shrimp",
+        "Frozen Corn",
+        "Creme Fraiche",
+        "Canola Oil",
+        "AP Flour",
+        "Roasted Garlic & Herb Butter",
+        "Vegetable Base",
+        "Hot Sauce",
+        "Chesapeake Seasoning",
+        "Seasoned Salt Blend"
+      ]
+    },
+    {
+      "id": "8O7eN2PD",
+      "name": "Onion and Mushroom Stroganoff Penne",
+      "type": "Meal Kit",
+      "tier": "Unknown Tier",
+      "servings": 2,
+      "ingredients": [
+        "Cream Sauce Base",
+        "Cremini Mushrooms",
+        "Penne Pasta",
+        "Onion",
+        "Shredded Mozzarella",
+        "Vegetable Base",
+        "Seasoned Croutons",
+        "Garlic Cloves",
+        "Thyme Sprigs"
+      ]
+    },
+    {
+      "id": "4PXJ50Om",
+      "name": "Vegetarian Curry Rice Bowl",
+      "type": "Meal Kit",
+      "tier": "Unknown Tier",
+      "servings": 2,
+      "ingredients": [
+        "Parsnips",
+        "Cream Sauce Base",
+        "Red Potatoes",
+        "Long Grain White Rice",
+        "Diced Carrots",
+        "Crushed Tomatoes",
+        "Naan Dippers",
+        "Creme Fraiche",
+        "Green Onions",
+        "Minced Garlic and Chili Pepper",
+        "Buttermilk-Dill Seasoning",
+        "Curry Powder"
+      ]
+    },
+    {
+      "id": "jOQrd63A",
+      "name": "Chicken with Thyme-Lemon Sauce and Almonds",
+      "type": "Express",
+      "tier": "Unknown Tier",
+      "servings": 2,
+      "ingredients": [
+        "Boneless Skinless Chicken Breasts",
+        "Green Beans",
+        "Cream Sauce Base",
+        "Lemon",
+        "Roasted Sliced Almonds",
+        "Garlic Pepper",
+        "Portuguese Piri Piri Blend",
+        "Thyme Sprigs"
+      ]
+    },
+    {
+      "id": "WPeKA9Ok",
+      "name": "Chicken Teriyaki Sando",
+      "type": "Express",
+      "tier": "Fall Harvest",
+      "servings": 2,
+      "ingredients": [
+        "Boneless Skinless Chicken Breasts",
+        "Yukon Potatoes",
+        "Slaw Mix",
+        "Potato Rolls ",
+        "Teriyaki Glaze",
+        "Jalapeno Pepper",
+        "Seasoned Rice Wine Vinegar",
+        "Mayonnaise",
+        "Green Onions",
+        "Garlic Pepper",
+        "Multicolor Sesame Seeds",
+        "Umami Seasoning"
+      ]
+    },
+    {
+      "id": "2PZk5Gq9",
+      "name": "Oaxacan Pork and Bean Tostada",
+      "type": "Express",
+      "tier": "Unknown Tier",
+      "servings": 2,
+      "ingredients": [
+        "Ground Pork",
+        "Black Beans",
+        "Large Flour Tortillas",
+        "Poblano Pepper",
+        "Enchilada Sauce",
+        "Shredded Cheddar-Jack Cheese",
+        "Cream Cheese",
+        "Light Sour Cream",
+        "Green Onions",
+        "Fiesta Seasoning",
+        "Garlic Salt"
+      ]
+    },
+    {
+      "id": "zPaNrlqv",
+      "name": "Beef Shepherd’s Pie",
+      "type": "Express",
+      "tier": "Unknown Tier",
+      "servings": 2,
+      "ingredients": [
+        "Ground Beef",
+        "Mashed Potatoes",
+        "Diced Carrots",
+        "Frozen Peas",
+        "Shallot",
+        "Creme Fraiche",
+        "Tomato Puree",
+        "Grated Parmesan Cheese",
+        "Chicken Broth Concentrate",
+        "AP Flour",
+        "Tamari Soy Sauce",
+        "Thyme Sprigs"
+      ]
+    },
+    {
+      "id": "oOA2GA3y",
+      "name": "Pork Taco Meatballs with Salsa",
+      "type": "Express",
+      "tier": "Fall Harvest",
+      "servings": 2,
+      "ingredients": [
+        "Ground Pork",
+        "Cooked White Rice",
+        "Red Bell Pepper",
+        "Fire Roasted Salsa",
+        "Frozen Corn",
+        "Light Sour Cream",
+        "Shredded Nacho/Taco Cheese Blend",
+        "Tortilla Strips",
+        "Plain Breadcrumbs",
+        "Taco Seasoning"
+      ]
+    },
+    {
+      "id": "GqnxZY3W",
+      "name": "Orange Sesame Pork Stir-Fry",
+      "type": "Express",
+      "tier": "One Pan",
+      "servings": 2,
+      "ingredients": [
+        "Sliced Pork",
+        "Cooked White Rice",
+        "Pepper and Onion Mix",
+        "Heads of Baby Bok Choy",
+        "Orange Ginger Sesame Sauce",
+        "Green Onions",
+        "Tamari Soy Sauce",
+        "Fresh Basil",
+        "Asian Garlic, Ginger & Chile Seasoning"
+      ]
+    },
+    {
+      "id": "lOb2boOV",
+      "name": "Buttery Tomato Pork Chop",
+      "type": "Express",
+      "tier": "Fall Harvest",
+      "servings": 2,
+      "ingredients": [
+        "Boneless Pork Chops",
+        "Zucchini",
+        "Red Bell Pepper",
+        "Grape Tomatoes",
+        "Marinara Sauce",
+        "Tuscan Herb Butter",
+        "Grated Parmesan Cheese",
+        "Garlic and Parsley Seasoning",
+        "Chimichurri Seasoning",
+        "Garlic Salt"
+      ]
+    },
+    {
+      "id": "DOp9kL3r",
+      "name": "Zesty Poblano Chicken Chowder",
+      "type": "Meal Kit",
+      "tier": "One Pot ",
+      "servings": 2,
+      "ingredients": [
+        "Diced Boneless Skinless Chicken Breasts",
+        "Cream Sauce Base",
+        "Onion",
+        "Poblano Pepper",
+        "Frozen Corn",
+        "Lime",
+        "Shredded Mozzarella",
+        "Tortilla Strips",
+        "Chicken Broth Concentrate",
+        "Chile and Cumin Rub"
+      ]
+    },
+    {
+      "id": "A3KzaRO6",
+      "name": "Crunchy Pesto Mozzarella Chicken",
+      "type": "Oven-Ready",
+      "tier": "GLP-1 Friendly",
+      "servings": 2,
+      "ingredients": [
+        "Boneless Skinless Chicken Breasts",
+        "Green Beans",
+        "Grape Tomatoes",
+        "Shredded Mozzarella",
+        "Basil Pesto",
+        "Plain Breadcrumbs",
+        "Shredded Parmesan Cheese",
+        "Garlic Pepper"
+      ]
+    },
+    {
+      "id": "MqgWZEqn",
+      "name": "Sausage Risotto Verde",
+      "type": "Oven-Ready",
+      "tier": "Unknown Tier",
+      "servings": 2,
+      "ingredients": [
+        "Cooked White Rice",
+        "Italian Pork Sausage",
+        "Cream Sauce Base",
+        "Baby Spinach",
+        "Basil Pesto",
+        "Leeks",
+        "Basil Pesto Butter",
+        "Grated Parmesan Cheese",
+        "Garlic Pepper",
+        "Lemon Juice",
+        "Garlic Salt"
+      ]
+    },
+    {
+      "id": "DOpd6JOr",
+      "name": "Tomato Parmesan Turkey Meatloaf",
+      "type": "Oven-Ready",
+      "tier": "Unknown Tier",
+      "servings": 2,
+      "ingredients": [
+        "Ground Turkey",
+        "Sliced Zucchini",
+        "Grape Tomatoes",
+        "Mayonnaise ",
+        "Goat Cheese",
+        "Sun Dried Tomato Pesto",
+        "Grated Parmesan Cheese",
+        "Plain Breadcrumbs",
+        "Garlic Salt"
+      ]
+    },
+    {
+      "id": "bO9VNG3n",
+      "name": "Spinach Florentine Chicken Noodles",
+      "type": "Oven-Ready",
+      "tier": "Unknown Tier",
+      "servings": 2,
+      "ingredients": [
+        "Fully Cooked Seasoned Diced Chicken Breast ",
+        "Cream Sauce Base",
+        "Par Cooked Flat Noodles",
+        "Baby Spinach",
+        "Basil Pesto Butter",
+        "Grated Parmesan Cheese",
+        "Shredded Mozzarella",
+        "Minced Garlic and Parsley",
+        "Italian Seasoning Blend"
+      ]
+    },
+    {
+      "id": "n3v8Kpqe",
+      "name": "Pulled Pork Ragu with Arrabbiata Sauce",
+      "type": "Oven-Ready",
+      "tier": "Unknown Tier",
+      "servings": 2,
+      "ingredients": [
+        "Cooked Penne Pasta",
+        "Fully Cooked Pulled Pork",
+        "Cream Sauce Base",
+        "Marinara Sauce",
+        "Arrabbiata Pesto",
+        "Grated Parmesan Cheese",
+        "Garlic Salt",
+        "Red Pepper Flakes"
+      ]
+    }
+  ]
+}
