@@ -130,7 +130,7 @@ def is_included(meal, amount):
     if tier in EXCLUDED_LABELS:
         return False
 
-    return meal_amount == amount
+    return meal_amount <= amount
 
 def fetch_meal_details(meal_id):
     """
