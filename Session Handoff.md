@@ -1,4 +1,4 @@
-# Session Handoff — August 28, 2026
+# Session Handoff — October 13, 2026
 
 ## Where We Left Off
 
@@ -54,6 +54,29 @@ The separate `homechef` environment is also not the project environment.
 
 ---
 
+## Changes Since the August 28 Handoff
+
+**Tests are green.** `python -m pytest` currently passes 96 tests. Plain `pytest` fails with `No module named 'src'` unless a `pytest.ini` (`pythonpath = .`, `testpaths = tests`) exists. Use `python -m pytest`.
+
+**`--amount` semantics changed.** `is_included` in `src/clean_menu.py` now returns `MIN_SERVINGS <= meal_amount <= amount` (`MIN_SERVINGS = 2`).
+
+- `--amount 2` returns only 2-serving meals.
+- `--amount 4` returns 2-serving and 4-serving meals. A 2-serving meal can be doubled, and it helps to know what the guest might want to eat.
+- 0- and 1-serving meals are never included.
+- `get_meal_amount` is unchanged: an explicit 0 stays 0, and missing servings default to 2.
+- Against `tests/fixtures/sample-menu.json`: 4 meals for `amount=2`, 7 for `amount=4`. Meals 1011-1014 are 1-serving and are dropped.
+
+**Guest allergies were added.** The guest is allergic to fish, shellfish, and nuts (including peanuts). Confirmed allergens are a hard `EXCLUDE` gate that applies before ranking. They are never "adaptable", unlike pepper. Status precedence is EXCLUDE > REVIEW > ADAPTABLE > PROMISING. The full rules are in the Master Project Notes. Nothing is implemented in `rules.py` yet.
+
+**Open decisions:**
+
+- Raw eggs are not in the allergy rules. Decide between a guest allergen (EXCLUDE) and a preparation concern (REVIEW).
+- Coconut is REVIEW until the guest's coconut avoidance is specified.
+
+- Tier fallback: decide how to re-include Culinary Collection and Premium (a flag, or an automatic fallback when fewer than 3 Standard candidates survive screening).
+
+---
+
 ## Current Repository
 
 Primary files:
@@ -61,8 +84,10 @@ Primary files:
 ```text
 src/parser.py
 src/rules.py
+src/clean_menu.py
 src/output.py
 src/debug_html.py
+tools/homechef_urls.py
 main.py
 tests/
 data/
@@ -438,6 +463,10 @@ Unknown seasoning blend
 Ambiguous seasoning system
 Unclear prepared component
 ```
+### 🔴 EXCLUDE
+
+A guest allergen (fish, shellfish, peanut, tree nut) is confirmed. This is a compatibility gate, not an effort judgment. Salmon, Walnut Halves, and Peanut Butter are examples. A meal with Garlic Pepper plus walnuts is EXCLUDE, because the adaptable pepper never masks the allergen.
+
 
 ### 🔴 DON'T WASTE THE CLICK
 
@@ -537,30 +566,28 @@ This is a useful example of why **practical adaptability** matters more than sim
 
 # Tier / Cost Priority
 
-Meal tier is separate from pepper/safety/practical classification.
+Goal: find the cheapest meals first, and only add Culinary Collection and Premium meals if there aren't enough good choices.
+
+**Current behavior:** the cleaner filters out Premium and Culinary Collection entirely. They were being mixed into the list without being labeled, which defeated the cheapest-first goal.
+
+**Future feature:** an option to add them back as a fallback pool, with the tier clearly shown on each meal.
 
 Preferred ordering priority:
 
-```text
+​```text
 Standard
     ↓
 Culinary Collection
     ↓
 Premium
-```
-
-A more expensive Culinary Collection meal should not automatically displace a practical Standard meal merely because it looks appealing.
-
-A Culinary Collection meal can still be useful when the Standard pool is insufficient.
-
-Premium should generally be fallback rather than automatically promoted.
+​```
 
 Important:
 
-```text
+​```text
 Premium ≠ difficult
 Culinary Collection ≠ difficult
-```
+​```
 
 Tier describes purchasing/pricing priority, not cooking effort.
 
@@ -637,6 +664,10 @@ Compound Butter → adaptable
 Cream Sauce Base → don't waste the click
 Pre-seasoned component → don't waste the click
 Unknown seasoning blend → review
+Salmon → EXCLUDE
+Walnut Halves → EXCLUDE
+Peanut Butter → EXCLUDE
+Garlic Pepper + Walnut Halves → EXCLUDE
 ```
 
 Implement only the smallest behavior required by the test.

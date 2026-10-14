@@ -50,6 +50,7 @@ from pathlib import Path
 
 EXCLUDED_LABELS = {
     "Premium",
+    "Culinary Collection",
     "Breakfast",
     "Heat & Eat",
     "Dessert",

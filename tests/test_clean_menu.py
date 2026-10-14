@@ -648,6 +648,69 @@ def test_is_included_serving_range(servings, amount, expected):
     assert is_included(meal, amount) is expected
 
 
+@pytest.mark.parametrize("tier", ["Culinary Collection", "Premium"])
+def test_is_included_excludes_upcharge_tiers(tier):
+    """Culinary Collection and Premium meals are filtered out for now."""
+    meal = make_meal(tier=tier, servings=2)
+
+    assert is_included(meal, 2) is False
+    assert is_included(meal, 4) is False
+
+
+def test_is_included_keeps_other_tiers():
+    """A meal in a tier that isn't filtered should still be included."""
+    meal = make_meal(tier="Fresh Start", servings=2)
+
+    assert is_included(meal, 2) is True
+
+
+def test_clean_menu_removes_culinary_collection(monkeypatch):
+    """clean_menu should drop Culinary Collection meals and keep the rest."""
+    data = {
+        "meals": [
+            make_meal(meal_id=1, tier="Fresh Start", servings=2),
+            make_meal(meal_id=2, tier="Culinary Collection", servings=2),
+            make_meal(meal_id=3, tier="Culinary Collection", servings=4),
+        ]
+    }
+
+    monkeypatch.setattr("src.clean_menu.fetch_meal_details", lambda meal_id: None)
+
+    assert [m["id"] for m in clean_menu(data, amount=2)] == [1]
+    assert [m["id"] for m in clean_menu(data, amount=4)] == [1]
+
+
+def test_clean_menu_does_not_fetch_details_for_culinary_collection(monkeypatch):
+    """Filtered meals should not trigger detail lookups."""
+    data = {
+        "meals": [
+            make_meal(meal_id=1, tier="Culinary Collection", servings=2),
+            make_meal(meal_id=2, tier="Fresh Start", servings=2),
+        ]
+    }
+
+    fetched_ids = []
+    monkeypatch.setattr(
+        "src.clean_menu.fetch_meal_details",
+        lambda meal_id: fetched_ids.append(meal_id),
+    )
+
+    clean_menu(data, amount=2)
+
+    assert fetched_ids == [2]
+
+
+@pytest.mark.parametrize("amount", [2, 4])
+def test_sample_menu_has_no_culinary_collection_or_premium(monkeypatch, amount):
+    """Real fixture check, using literal names so it can't pass vacuously."""
+    result = clean_sample(monkeypatch, amount)
+
+    assert result
+    assert {m["tier"] for m in result}.isdisjoint(
+        {"Culinary Collection", "Premium"}
+    )
+   
+
 def test_family_meal_included_only_when_four_requested():
     """Family meals always count as four servings."""
     meal = make_meal(meal_type="Family", servings=2)

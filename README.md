@@ -295,7 +295,8 @@ data/14-sep-2026-scan.txt
  The excluded categories include:
 
 ```
-Premium?  [tier is preserved; see Tier Handling below]
+Premium (tier) [tier is preserved; see Tier Handling below]
+Culinary Collection (tier) 
 Breakfast
 Heat & Eat
 Dessert
@@ -308,35 +309,37 @@ Protein Pack
 
  The important distinction is that **meal type and meal tier are separate concepts**.
 
- The cleaner removes unwanted meal _types_, while preserving the meal's _tier_ so that Standard, Culinary Collection, and Premium meals can remain distinguishable later in the pipeline.
+ The cleaner removes unwanted meal _types_, and currently also removes the **Premium** and **Culinary Collection** _tiers_. See Tier Handling below.
 
 ---
 
  # Tier Handling
 
- Home Chef meals may have different tiers, including:
+ Home Chef meals have different tiers, including:
 
  - Standard
 - Culinary Collection
 - Premium
 
- The current cleaning stage does **not** treat Premium or Culinary Collection as an automatic ingredient exclusion.
+ **Premium and Culinary Collection meals are currently filtered out by the cleaner.**
 
- Instead, the tier is preserved in the cleaned meal object:
+ Previously these tiers were mixed into the results without making clear which meal was which, which made it hard to find the cheapest meals first. For now, only the lower-cost meals are returned.
+
+ The intended future behavior is:
 
 ```
-{
-  "name": "Example Meal",
-  "type": "Entrée",
-  "tier": "Premium",
-  "servings": 2,
-  "ingredients": []
-}
+Find enough Standard meals first
+↓
+If there are too few, add Culinary Collection
+↓
+If still too few, add Premium
+↓
+Always show each meal’s tier
 ```
 
- This allows later screening and ordering logic to make use of the tier information without losing meals prematurely.
+ This will be added as an opt-in feature to bring those tiers back in. The tier field is still preserved on every cleaned meal, so later stages can tell meals apart.
 
- Tier handling and allergy screening are therefore separate stages.
+ Tier handling and allergy screening are separate stages.
 
 ---
 
@@ -367,22 +370,22 @@ python src/clean_menu.py data/14-sep-2026.json
 
  This produces the 2-serving meal set.
 
- ## Four-Serving Workflow
+## Four-Serving Workflow
 
  Use:
 
-```
+​```
 python src/clean_menu.py data/14-sep-2026.json --amount 4
-```
+​```
 
- When requesting 4 servings, the desired behavior is to retain:
+ When requesting 4 servings, the cleaner retains:
 
  - 2-serving meals
 - 4-serving meals
 
- A 2-serving meal should **not** be discarded simply because the requested amount is 4.
+ A 2-serving meal is **not** discarded because the requested amount is 4. It can be doubled to feed four, and it shows which meals are worth considering.
 
- The serving amount should therefore be interpreted as a maximum acceptable meal size for the current workflow rather than an exact equality requirement.
+ The serving amount is a **maximum** acceptable meal size, with a **minimum of 2 servings** (`MIN_SERVINGS` in `src/clean_menu.py`). Meals below 2 servings, such as 1-serving meals, are never included in either workflow.
 
  Family meals are treated as 4-serving meals.
 
@@ -587,6 +590,8 @@ def evaluate_meals(meals):
  Therefore, the current system should **not** be described as having a completed automatic SAFE/BORDERLINE/NOT SAFE classification pipeline.
 
  The immediate development goal is to connect the cleaned meal data to the rule engine and produce the final classification output.
+
+  Guest allergens (fish, shellfish, peanuts, and tree nuts) have been defined in the Master Project Notes as hard compatibility gates, separate from the pepper household restriction. They are **not yet implemented** in `src/rules.py`, which currently covers only the pepper/chili, sauce-system, and hard-block groups above.
 
 ---
 
@@ -918,9 +923,7 @@ python main.py
 
  ## Run Tests
 
-```
-python -m pytest
-```
+ Run tests with `python -m pytest` from the repository root. Plain `pytest` only works if a `pytest.ini` with `pythonpath = .` is present; otherwise it fails with `ModuleNotFoundError: No module named 'src'`.
 
 ---
 
@@ -928,7 +931,7 @@ python -m pytest
 
  The project currently contains tests for:
 
- - Menu cleaning
+ - Menu cleaning, including the serving-range rules (`--amount` is a maximum, with a 2-serving minimum)
 - Home Chef URL generation
 - JSON parsing
 - Ingredient exclusion rules
@@ -970,8 +973,14 @@ python -m pytest
 - Apply ingredient exclusion rules
 - Detect known blocked ingredients
 - Detect blocked sauce systems
+- Detect guest allergens (fish, shellfish, peanuts, tree nuts) and treat confirmed allergens as EXCLUDE before any ranking
 - Identify undefined seasoning systems
 - Generate SAFE/BORDERLINE/NOT SAFE classifications
+
+ ## Tier Fallback (future)
+
+- Add an option to include Culinary Collection and Premium meals when too few Standard meals survive screening
+- Label each meal's tier clearly in the output
 
  ## Phase 3 — Automated Menu Acquisition
 
@@ -1022,8 +1031,10 @@ python -m pytest
 - Conservative filtering is intentional.
 - The system should prefer identifying a meal as requiring review rather than making an unsupported assumption that it is safe.
 - Tier information such as Standard, Culinary Collection, and Premium is preserved independently from ingredient screening.
+- A 4-serving workflow should retain both 2-serving and 4-serving meals. The serving amount is a maximum, with a 2-serving minimum, rather than an exact-match filter.
 - A 4-serving workflow should retain both 2-serving and 4-serving meals rather than treating serving amount as an exact-match filter.
 - The current classification layer remains under active development.
+- Premium and Culinary Collection meals are currently filtered out. The tier is still preserved on cleaned meals, and an option to add them back when Standard meals are insufficient is planned.
 
 ---
 
