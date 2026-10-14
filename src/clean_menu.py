@@ -60,6 +60,7 @@ EXCLUDED_LABELS = {
     "Protein Pack",
 }
 
+MIN_SERVINGS = 2
 
 def get_meal_amount(meal):
     """
@@ -130,7 +131,7 @@ def is_included(meal, amount):
     if tier in EXCLUDED_LABELS:
         return False
 
-    return meal_amount <= amount
+    return MIN_SERVINGS <= meal_amount <= amount
 
 def fetch_meal_details(meal_id):
     """

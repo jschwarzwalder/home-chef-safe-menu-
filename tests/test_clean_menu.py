@@ -1,5 +1,6 @@
 """Tests for Home Chef menu cleaning and normalization."""
 import json
+import pytest
 from pathlib import Path
 
 import src.clean_menu as clean_menu_module
@@ -628,34 +629,70 @@ def test_clean_menu_filters_excluded_and_wrong_serving_meals(monkeypatch):
     assert [meal["id"] for meal in result] == [1]
 
 
-def test_clean_menu_can_select_four_serving_meals(monkeypatch):
-    """clean_menu should select Family/four-serving meals when requested."""
+@pytest.mark.parametrize(
+    "servings, amount, expected",
+    [
+        (2, 2, True),
+        (2, 4, True),    # the new behavior: 2-serving kept when asking for 4
+        (4, 4, True),
+        (4, 2, False),   # too big for a 2-serving order
+        (1, 2, False),   # below the floor
+        (1, 4, False),
+        (0, 4, False),
+    ],
+)
+def test_is_included_serving_range(servings, amount, expected):
+    """Requested amount is a maximum, with a minimum of two servings."""
+    meal = make_meal(servings=servings)
+
+    assert is_included(meal, amount) is expected
+
+
+def test_family_meal_included_only_when_four_requested():
+    """Family meals always count as four servings."""
+    meal = make_meal(meal_type="Family", servings=2)
+
+    assert is_included(meal, 4) is True
+    assert is_included(meal, 2) is False
+
+
+def test_clean_menu_amount_four_includes_two_and_four_serving_meals(monkeypatch):
+    """--amount 4 should return both 2-serving and 4-serving meals in menu order."""
     data = {
         "meals": [
-            make_meal(
-                meal_id=1,
-                title="Two Serving",
-                servings=2,
-            ),
-            make_meal(
-                meal_id=2,
-                title="Family Meal",
-                meal_type="Family",
-                servings=4,
-            ),
+            make_meal(meal_id=1, title="Two Serving", servings=2),
+            make_meal(meal_id=2, title="Family Meal", meal_type="Family", servings=4),
+            make_meal(meal_id=3, title="One Serving", servings=1),
         ]
     }
 
-    monkeypatch.setattr(
-        "src.clean_menu.fetch_meal_details",
-        lambda meal_id: None,
-    )
+    monkeypatch.setattr("src.clean_menu.fetch_meal_details", lambda meal_id: None)
 
     result = clean_menu(data, amount=4)
 
-    assert [meal["id"] for meal in result] == [2]
-    assert result[0]["servings"] == 4
+    assert [meal["id"] for meal in result] == [1, 2]
+    assert [meal["servings"] for meal in result] == [2, 4]
 
+
+def test_clean_menu_amount_four_fetches_details_for_two_serving_meals(monkeypatch):
+    """Detail lookups should happen for every meal that is kept."""
+    data = {
+        "meals": [
+            make_meal(meal_id=1, servings=2),
+            make_meal(meal_id=2, servings=4),
+            make_meal(meal_id=3, servings=1),
+        ]
+    }
+
+    fetched_ids = []
+    monkeypatch.setattr(
+        "src.clean_menu.fetch_meal_details",
+        lambda meal_id: fetched_ids.append(meal_id),
+    )
+
+    clean_menu(data, amount=4)
+
+    assert fetched_ids == [1, 2]
 
 def test_clean_menu_handles_empty_menu(monkeypatch):
     """An empty menu should produce an empty result."""
@@ -665,6 +702,39 @@ def test_clean_menu_handles_empty_menu(monkeypatch):
     )
 
     assert clean_menu({"meals": []}, amount=2) == []
+
+def clean_sample(monkeypatch, amount):
+    monkeypatch.setattr("src.clean_menu.fetch_meal_details", lambda meal_id: None)
+    return clean_menu(load_sample_menu(), amount=amount)
+
+
+def test_sample_menu_amount_four_only_contains_two_and_four_servings(monkeypatch):
+    result = clean_sample(monkeypatch, 4)
+
+    assert result
+    assert {meal["servings"] for meal in result} <= {2, 4}
+
+
+def test_sample_menu_amount_four_includes_both_sizes(monkeypatch):
+    """The fixture must actually exercise both sizes, or this test proves nothing."""
+    result = clean_sample(monkeypatch, 4)
+
+    assert {meal["servings"] for meal in result} == {2, 4}
+
+
+def test_sample_menu_amount_four_is_superset_of_amount_two(monkeypatch):
+    two = {meal["id"] for meal in clean_sample(monkeypatch, 2)}
+    four = {meal["id"] for meal in clean_sample(monkeypatch, 4)}
+
+    assert two <= four
+
+
+def test_sample_menu_amount_four_adds_only_four_serving_meals(monkeypatch):
+    two = {meal["id"] for meal in clean_sample(monkeypatch, 2)}
+    extra = [m for m in clean_sample(monkeypatch, 4) if m["id"] not in two]
+
+    assert extra
+    assert all(meal["servings"] == 4 for meal in extra)
 
 
 def test_clean_menu_handles_missing_meals_key(monkeypatch):
@@ -830,14 +900,6 @@ def test_create_scan_text_with_empty_ingredients():
 
     assert result == "Test Meal | Entree | Fresh Start\n"
 
-def load_sample_menu():
-    """Load the real sample Home Chef menu fixture."""
-    path = Path(__file__).parent.parent / "tests" / "fixtures" / "sample-menu.json"
-
-    with path.open("r", encoding="utf-8") as f:
-        return json.load(f)
-
-
 def test_sample_menu_contains_meals():
     """The sample menu fixture should contain the expected source data."""
     data = load_sample_menu()
@@ -988,70 +1050,3 @@ def test_sample_menu_cleaning_produces_scan_text(monkeypatch):
             assert meal["type"] in scan_text
             assert meal["tier"] in scan_text
 
-def test_sample_menu_cleaning_returns_correct_two_serving_count(
-    monkeypatch,
-):
-    """Cleaning the sample menu for 2 servings returns the expected count."""
-    monkeypatch.setattr(
-        "src.clean_menu.fetch_meal_details",
-        lambda meal_id: None,
-    )
-
-    data = load_sample_menu()
-
-    result = clean_menu(data, amount=2)
-
-    assert len(result) == 4
-
-
-def test_sample_menu_cleaning_returns_correct_four_serving_count(
-    monkeypatch,
-):
-    """Cleaning the sample menu for 4 servings returns the expected count."""
-    monkeypatch.setattr(
-        "src.clean_menu.fetch_meal_details",
-        lambda meal_id: None,
-    )
-
-    data = load_sample_menu()
-
-    result = clean_menu(data, amount=4)
-
-    assert len(result) == 3
-
-def test_clean_sample_menu_returns_expected_two_serving_meals(
-    monkeypatch,
-):
-    """Cleaning the sample menu should return the expected 2-serving meals."""
-
-    data = load_sample_menu()
-
-    monkeypatch.setattr(
-        "src.clean_menu.fetch_meal_details",
-        lambda meal_id: None,
-    )
-
-    result = clean_menu(data, amount=2)
-
-    assert len(result) == 4
-
-    assert all(meal["servings"] == 2 for meal in result)
-
-
-def test_clean_sample_menu_returns_expected_four_serving_meals(
-    monkeypatch,
-):
-    """Cleaning the sample menu with amount=4 should return only 4-serving meals."""
-
-    data = load_sample_menu()
-
-    monkeypatch.setattr(
-        "src.clean_menu.fetch_meal_details",
-        lambda meal_id: None,
-    )
-
-    result = clean_menu(data, amount=4)
-
-    assert len(result) == 3
-
-    assert all(meal["servings"] == 4 for meal in result)
