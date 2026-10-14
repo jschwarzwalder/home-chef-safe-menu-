@@ -63,6 +63,15 @@ EXCLUDED_LABELS = {
 
 MIN_SERVINGS = 2
 
+TIER_CHOICES = {
+    "culinary": "Culinary Collection",
+    "premium": "Premium",
+}
+
+def tiers_from_names(names):
+    """Convert CLI names like 'culinary' into Home Chef tier labels."""
+    return {TIER_CHOICES[name] for name in names}
+
 def get_meal_amount(meal):
     """
     Determine the serving amount for a meal.
@@ -119,7 +128,7 @@ def get_tier(meal):
     return meal_label.get("label") or "Unknown Tier"
 
 
-def is_included(meal, amount):
+def is_included(meal, amount, include_tiers=frozenset()):
     """Return True when a meal belongs in the requested menu."""
 
     meal_type = get_meal_type(meal)
@@ -129,7 +138,7 @@ def is_included(meal, amount):
     if meal_type in EXCLUDED_LABELS:
         return False
 
-    if tier in EXCLUDED_LABELS:
+    if tier in EXCLUDED_LABELS and tier not in include_tiers:
         return False
 
     return MIN_SERVINGS <= meal_amount <= amount
@@ -258,7 +267,7 @@ def clean_meal(meal):
     return cleaned
 
 
-def clean_menu(data, amount):
+def clean_menu(data, amount, include_tiers=frozenset()):
     """Create the compact normalized menu."""
 
     meals = data.get("meals", [])
@@ -266,7 +275,7 @@ def clean_menu(data, amount):
     return [
         clean_meal(meal)
         for meal in meals
-        if is_included(meal, amount)
+        if is_included(meal, amount, include_tiers)
     ]
 
 
@@ -311,6 +320,14 @@ def main():
         help="Number of servings wanted: 2 (default) or 4",
     )
 
+    parser.add_argument(
+        "--include",
+        nargs="+",
+        choices=sorted(TIER_CHOICES),
+        default=[],
+        help="Add filtered tiers back in: culinary, premium",
+    )
+
     args = parser.parse_args()
 
     input_path = Path(args.input)
@@ -322,14 +339,17 @@ def main():
     with input_path.open("r", encoding="utf-8") as f:
         data = json.load(f)
 
-    meals = clean_menu(data, args.amount)
+    include_tiers = tiers_from_names(args.include)
+    meals = clean_menu(data, args.amount, include_tiers)
+
+    suffix = "".join(f"-{name}" for name in sorted(args.include))
 
     json_output_path = input_path.with_name(
-        f"{input_path.stem}-clean.json"
+        f"{input_path.stem}{suffix}-clean.json"
     )
 
     text_output_path = input_path.with_name(
-        f"{input_path.stem}-scan.txt"
+        f"{input_path.stem}{suffix}-scan.txt"
     )
 
     # Programmatic JSON output.
@@ -359,6 +379,7 @@ def main():
     print(f"JSON output: {json_output_path}")
     print(f"Text output: {text_output_path}")
     print(f"Amount:      {args.amount}")
+    print(f"Included:    {', '.join(args.include) or 'none'}")
     print(f"Meals:       {len(meals)} of {total_meals}")
     print(
         f"JSON size:   {original_size:,} bytes → "
