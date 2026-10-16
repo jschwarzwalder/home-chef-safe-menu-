@@ -295,7 +295,7 @@ data/14-sep-2026-scan.txt
  The excluded categories include:
 
 ```
-Premium (tier) [tier is preserved; see Tier Handling below]
+Premium (tier) 
 Culinary Collection (tier) 
 Breakfast
 Heat & Eat
@@ -307,37 +307,26 @@ Protein
 Protein Pack
 ```
 
- The important distinction is that **meal type and meal tier are separate concepts**.
-
- The cleaner removes unwanted meal _types_, and currently also removes the **Premium** and **Culinary Collection** _tiers_. See Tier Handling below.
+ Meal type and meal tier are separate concepts. The cleaner removes unwanted meal _types_, and by default also removes the **Premium** and **Culinary Collection** _tiers_. They can be added back with `--include` (see Tier Handling).
 
 ---
 
- # Tier Handling
+  # Tier Handling
 
- Home Chef meals have different tiers, including:
+ Home Chef meals have different tiers, including Standard, Culinary Collection, and Premium.
 
- - Standard
-- Culinary Collection
-- Premium
+ **Premium and Culinary Collection are filtered out by default** so the cheapest meals can be found first. The tier is still stored on every cleaned meal and shown on each scan-text header line.
 
- **Premium and Culinary Collection meals are currently filtered out by the cleaner.**
-
- Previously these tiers were mixed into the results without making clear which meal was which, which made it hard to find the cheapest meals first. For now, only the lower-cost meals are returned.
-
- The intended future behavior is:
+ To add them back, use `--include`:
 
 ```
-Find enough Standard meals first
-↓
-If there are too few, add Culinary Collection
-↓
-If still too few, add Premium
-↓
-Always show each meal’s tier
+python src/clean_menu.py data/12-oct-2026.json --amount 4 --include culinary
+python src/clean_menu.py data/12-oct-2026.json --amount 4 --include culinary premium
 ```
 
- This will be added as an opt-in feature to bring those tiers back in. The tier field is still preserved on every cleaned meal, so later stages can tell meals apart.
+ Put the file path before `--include`. When tiers are included, the output filenames get a suffix (for example `12-oct-2026-culinary-clean.json`) so runs don't overwrite each other.
+
+ **Not yet built:** automatically adding Culinary Collection and Premium only when too few Standard meals survive screening, and sorting Standard meals first.
 
  Tier handling and allergy screening are separate stages.
 
@@ -370,7 +359,7 @@ python src/clean_menu.py data/14-sep-2026.json
 
  This produces the 2-serving meal set.
 
-## Four-Serving Workflow
+ ## Four-Serving Workflow
 
  Use:
 
@@ -473,7 +462,7 @@ data/14-sep-2026-scan.txt
 Filet Mignon with Roasted Garlic-Chive Butter | Entrée | Standard
 Russet Potatoes; Light Sour Cream; Butter; Garlic; Chives
 
-Chicken with Roasted Vegetables | Entrée | Culinary Collection
+Chicken with Roasted Vegetables | Entrée | Oven Ready
 Chicken Breast; Carrots; Potatoes; Olive Oil
 ```
 
@@ -794,6 +783,9 @@ home-chef-safe-menu/
 - Detailed ingredient retrieval implemented
 - Fallback to original menu ingredients implemented
 - Recipe URL preservation implemented
+- Serving range (`--amount` is a maximum, 2-serving minimum) implemented and tested
+- Premium and Culinary Collection filtered by default
+- `--include` flag to add tiers back implemented
 
  ## Current Milestone
 
@@ -915,6 +907,14 @@ python src/clean_menu.py data/14-sep-2026.json --amount 4
 
  The 4-serving workflow is intended to retain both 2-serving and 4-serving meals.
 
+  The 4-serving workflow retains both 2-serving and 4-serving meals.
+
+ ## Include Culinary Collection or Premium
+
+```
+python src/clean_menu.py data/14-sep-2026.json --amount 4 --include culinary premium
+```
+
  ## Run the Main Application
 
 ```
@@ -979,8 +979,8 @@ python -m pytest
 
  ## Tier Fallback (future)
 
-- Add an option to include Culinary Collection and Premium meals when too few Standard meals survive screening
-- Label each meal's tier clearly in the output
+-- Automatically add Culinary Collection, then Premium, when too few Standard meals survive screening (the manual `--include` flag already exists)
+- Sort Standard meals first
 
  ## Phase 3 — Automated Menu Acquisition
 
@@ -1032,7 +1032,7 @@ python -m pytest
 - The system should prefer identifying a meal as requiring review rather than making an unsupported assumption that it is safe.
 - Tier information such as Standard, Culinary Collection, and Premium is preserved independently from ingredient screening.
 - A 4-serving workflow should retain both 2-serving and 4-serving meals. The serving amount is a maximum, with a 2-serving minimum, rather than an exact-match filter.
-- A 4-serving workflow should retain both 2-serving and 4-serving meals rather than treating serving amount as an exact-match filter.
+- Premium and Culinary Collection are filtered by default and can be added back with `--include`. The tier is always preserved on cleaned meals.
 - The current classification layer remains under active development.
 - Premium and Culinary Collection meals are currently filtered out. The tier is still preserved on cleaned meals, and an option to add them back when Standard meals are insufficient is planned.
 
